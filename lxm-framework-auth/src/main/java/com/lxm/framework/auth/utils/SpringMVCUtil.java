@@ -20,8 +20,9 @@ public class SpringMVCUtil {
      * @return request
      */
     public static HttpServletRequest getRequest() {
-        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if(servletRequestAttributes == null) {
+        ServletRequestAttributes servletRequestAttributes =
+                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (servletRequestAttributes == null) {
             throw new LxmAuthException(AuthPrompts.FAILED_FETCH_CONTEXT_REQUEST);
         }
         return servletRequestAttributes.getRequest();
@@ -32,11 +33,11 @@ public class SpringMVCUtil {
      * @return response
      */
     public static HttpServletResponse getResponse() {
-        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if(servletRequestAttributes == null) {
+        ServletRequestAttributes servletRequestAttributes =
+                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (servletRequestAttributes == null) {
             throw new LxmAuthException(AuthPrompts.FAILED_FETCH_CONTEXT_RESPONSE);
         }
         return servletRequestAttributes.getResponse();
     }
-
 }

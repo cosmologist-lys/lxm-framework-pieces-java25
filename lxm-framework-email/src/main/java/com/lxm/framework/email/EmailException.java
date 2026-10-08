@@ -8,8 +8,7 @@ package com.lxm.framework.email;
 public class EmailException extends RuntimeException {
     private static final long serialVersionUID = 3127526127829866639L;
 
-    public EmailException() {
-    }
+    public EmailException() {}
 
     public EmailException(String message) {
         super(message);

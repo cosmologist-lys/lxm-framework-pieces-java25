@@ -24,7 +24,7 @@ public class LxmTokenProperties {
     /**
      * token的长久有效期(单位:秒) 默认1天,-1代表一次性
      */
-    private long timeout =  24 * 60 * 60;
+    private long timeout = 24 * 60 * 60;
 
     /**
      * 一次性token，对于不登录，但又临时授予一个游客账号身份，有效期1小时
@@ -75,6 +75,4 @@ public class LxmTokenProperties {
      * token前缀
      */
     private String tokenPrefix;
-
-
 }

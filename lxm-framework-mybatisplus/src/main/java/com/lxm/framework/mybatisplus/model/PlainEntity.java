@@ -6,15 +6,12 @@ import com.baomidou.mybatisplus.spring.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-
-
 /**
  * @author Twenty2
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class PlainEntity<T extends Model<?>> extends SimpleEntity<T> {
-
 
     private static final long serialVersionUID = 7649725843294772985L;
 

@@ -7,7 +7,7 @@ import java.util.Properties;
  * @Date 2022/6/23
  * @Describe
  **/
-public enum EmailCategorySender implements EmailCategory{
+public enum EmailCategorySender implements EmailCategory {
 
     // qq企业版
     QQ_ENT("smtp.exmail.qq.com", 465, true, 10000),

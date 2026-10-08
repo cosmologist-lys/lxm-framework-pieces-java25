@@ -17,30 +17,37 @@ public class CacheTarget<K, V> implements Serializable {
 
     protected final K key;
     protected final V obj;
+
     /**
      * 上次访问时间
      */
     protected volatile long lastAccess;
+
     /**
      * 时间格式
      */
     protected final TimeUnit unit;
+
     /**
      * 访问次数
      */
     protected volatile AtomicLong accessCount = new AtomicLong();
+
     /**
      * 到期时间 local-date-time
      */
     private volatile LocalDateTime expireTime;
+
     /**
      * 到期时间 millis
      */
     private volatile long expireTimeMillis;
+
     /**
      * 是否永久存储
      */
     private volatile boolean permanent;
+
     /**
      * 过期时间的timestamp
      */
@@ -75,7 +82,6 @@ public class CacheTarget<K, V> implements Serializable {
         accessCount.getAndIncrement();
         return this.key;
     }
-
 
     /**
      * 获取值，并且更新最后访问时间
@@ -145,6 +151,14 @@ public class CacheTarget<K, V> implements Serializable {
 
     @Override
     public String toString() {
-        return "CacheObj [key=" + key + ", obj=" + obj + ", lastAccess=" + lastAccess + ", accessCount=" + accessCount + "]";
+        return "CacheObj [key="
+                + key
+                + ", obj="
+                + obj
+                + ", lastAccess="
+                + lastAccess
+                + ", accessCount="
+                + accessCount
+                + "]";
     }
 }

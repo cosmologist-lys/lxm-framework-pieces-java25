@@ -9,5 +9,10 @@ public final class ProtectedContext {
     public final EnigmaIdentity identity;
     public boolean authenticated;
     public boolean admitted;
-    public ProtectedContext(RequestContext request,KeySnapshot key,EnigmaIdentity identity) { this.request=request;this.key=key;this.identity=identity; }
+
+    public ProtectedContext(RequestContext request, KeySnapshot key, EnigmaIdentity identity) {
+        this.request = request;
+        this.key = key;
+        this.identity = identity;
+    }
 }

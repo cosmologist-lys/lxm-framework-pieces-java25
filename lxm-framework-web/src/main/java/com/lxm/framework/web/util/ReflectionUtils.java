@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-
 @Component
 public class ReflectionUtils {
 
@@ -35,13 +34,17 @@ public class ReflectionUtils {
         Object o;
 
         if (null == params) {
-            method = org.springframework.util.ReflectionUtils.findMethod(bean.getClass(), methodName);
+            method =
+                    org.springframework.util.ReflectionUtils.findMethod(
+                            bean.getClass(), methodName);
             if (method == null) {
                 return null;
             }
             o = org.springframework.util.ReflectionUtils.invokeMethod(method, bean);
         } else {
-            method = org.springframework.util.ReflectionUtils.findMethod(bean.getClass(), methodName, Map.class);
+            method =
+                    org.springframework.util.ReflectionUtils.findMethod(
+                            bean.getClass(), methodName, Map.class);
             if (method == null) {
                 return null;
             }

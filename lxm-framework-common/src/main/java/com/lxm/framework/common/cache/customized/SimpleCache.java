@@ -46,7 +46,8 @@ public class SimpleCache {
      * @param expire
      * @param expireUnit
      */
-    public static void put(@NonNull Object key, @NonNull Object value, long expire, @NonNull TimeUnit expireUnit) {
+    public static void put(
+            @NonNull Object key, @NonNull Object value, long expire, @NonNull TimeUnit expireUnit) {
         timeCache.put(key, value, expire, expireUnit);
     }
 
@@ -137,6 +138,4 @@ public class SimpleCache {
     public static int holderSize() {
         return permanentCache.size() + timeCache.size();
     }
-
-
 }

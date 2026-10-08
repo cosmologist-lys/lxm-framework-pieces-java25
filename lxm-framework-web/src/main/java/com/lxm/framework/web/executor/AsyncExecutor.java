@@ -25,7 +25,9 @@ public class AsyncExecutor {
     private static ExecutorService executorService;
 
     @Autowired
-    public AsyncExecutor(@Qualifier("lxmExecutor") SpringExecutor.LxmTaskExecutor taskExecutor, @Qualifier("lxmExecutorService") ExecutorService executorService) {
+    public AsyncExecutor(
+            @Qualifier("lxmExecutor") SpringExecutor.LxmTaskExecutor taskExecutor,
+            @Qualifier("lxmExecutorService") ExecutorService executorService) {
         AsyncExecutor.taskExecutor = taskExecutor;
         AsyncExecutor.executorService = executorService;
         log.debug("lxm-async-executor init success");

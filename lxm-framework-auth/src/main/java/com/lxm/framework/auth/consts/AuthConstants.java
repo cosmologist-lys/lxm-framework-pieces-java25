@@ -16,6 +16,7 @@ public class AuthConstants {
     public static final String TOKEN_TAG = "lxm-auth-token-";
 
     public static final String TOKEN_FORBID_TAG = "lxm-forbid-lid-";
+
     /**
      * token风格: uuid
      */

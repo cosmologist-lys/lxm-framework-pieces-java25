@@ -41,5 +41,4 @@ public enum ExcelExportEnum {
     public void setMsg(String msg) {
         this.msg = msg;
     }
-
 }

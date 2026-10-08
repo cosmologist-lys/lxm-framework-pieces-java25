@@ -20,8 +20,11 @@ public class BusConsumer implements BusSubscriberSession.BusConsumerInf {
     private final Set<String> topics;
     private final Boolean isOnce;
 
-
-    public BusConsumer(RedisTemplate<String, Object> session, RedisMessageListenerContainer container, Set<String> topics, Boolean isOnce) {
+    public BusConsumer(
+            RedisTemplate<String, Object> session,
+            RedisMessageListenerContainer container,
+            Set<String> topics,
+            Boolean isOnce) {
         this.session = session;
         this.container = container;
         this.topics = topics;

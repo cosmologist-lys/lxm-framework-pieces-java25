@@ -50,10 +50,11 @@ public class EntityUtils {
 
     static {
         objectMapper = com.lxm.framework.web.jackon.FrameworkJackson.mapper();
-        xmlMapper = XmlMapper.builder()
-            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-            .addModule(com.lxm.framework.web.jackon.FrameworkJackson.dates())
-            .build();
+        xmlMapper =
+                XmlMapper.builder()
+                        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                        .addModule(com.lxm.framework.web.jackon.FrameworkJackson.dates())
+                        .build();
     }
 
     /**
@@ -108,7 +109,8 @@ public class EntityUtils {
      * @param includes  指定复制的数组属性
      */
     @Deprecated
-    public static void copyProperties(Object src, Object dist, boolean allowNull, String[] includes) {
+    public static void copyProperties(
+            Object src, Object dist, boolean allowNull, String[] includes) {
         copyProperties(src, dist, allowNull, includes, null);
     }
 
@@ -145,41 +147,66 @@ public class EntityUtils {
      * @param includes  指定复制的数组属性
      * @param excludes  指定排除的数组属性
      */
-    public static void copyProperties(Object src, Object dist, boolean allowNull, String[] includes, String[] excludes) {
+    public static void copyProperties(
+            Object src, Object dist, boolean allowNull, String[] includes, String[] excludes) {
         if (Objects.isNull(src) || Objects.isNull(dist)) {
             return;
         }
         Class<?> distClz = dist.getClass();
-        Stream.of(getAllFields(distClz)).forEach(distField -> {
-            try {
-                if ("serialVersionUID".equals(distField.getName())) {
-                    return;
-                }
-                Class<?> srcClz = src.getClass();
-                Optional<Field> optional = Stream.of(getAllFields(srcClz)).filter(f -> f.getName().equals(distField.getName())).findFirst();
-                if (optional.isPresent()) {
-                    optional.get().setAccessible(true);
-                    Object v = optional.get().get(src);
-                    if (!allowNull && Objects.isNull(v)) {
-                        return;
-                    }
-                    if (ArrayUtils.getLength(excludes) > 0 && ArrayUtils.contains(excludes, distField.getName())) {
-                        return;
-                    }
-                    if (ArrayUtils.getLength(includes) > 0 && !ArrayUtils.contains(includes, distField.getName())) {
-                        return;
-                    }
-                    distField.setAccessible(true);
-                    if ("java.base".equals(distField.getType().getModule().getName())) {
-                        distField.set(dist, optional.get().get(src));
-                    } else {
-                        copyProperties(optional.get().get(src), distField.get(dist), allowNull, null, null);
-                    }
-                }
-            } catch (IllegalAccessException e) {
-                log.error("copy properties field error, srcClz : {}, distClz : {}, field : {}", src, dist, distField, e);
-            }
-        });
+        Stream.of(getAllFields(distClz))
+                .forEach(
+                        distField -> {
+                            try {
+                                if ("serialVersionUID".equals(distField.getName())) {
+                                    return;
+                                }
+                                Class<?> srcClz = src.getClass();
+                                Optional<Field> optional =
+                                        Stream.of(getAllFields(srcClz))
+                                                .filter(
+                                                        f ->
+                                                                f.getName()
+                                                                        .equals(
+                                                                                distField
+                                                                                        .getName()))
+                                                .findFirst();
+                                if (optional.isPresent()) {
+                                    optional.get().setAccessible(true);
+                                    Object v = optional.get().get(src);
+                                    if (!allowNull && Objects.isNull(v)) {
+                                        return;
+                                    }
+                                    if (ArrayUtils.getLength(excludes) > 0
+                                            && ArrayUtils.contains(excludes, distField.getName())) {
+                                        return;
+                                    }
+                                    if (ArrayUtils.getLength(includes) > 0
+                                            && !ArrayUtils.contains(
+                                                    includes, distField.getName())) {
+                                        return;
+                                    }
+                                    distField.setAccessible(true);
+                                    if ("java.base"
+                                            .equals(distField.getType().getModule().getName())) {
+                                        distField.set(dist, optional.get().get(src));
+                                    } else {
+                                        copyProperties(
+                                                optional.get().get(src),
+                                                distField.get(dist),
+                                                allowNull,
+                                                null,
+                                                null);
+                                    }
+                                }
+                            } catch (IllegalAccessException e) {
+                                log.error(
+                                        "copy properties field error, srcClz : {}, distClz : {}, field : {}",
+                                        src,
+                                        dist,
+                                        distField,
+                                        e);
+                            }
+                        });
     }
 
     /**
@@ -276,7 +303,7 @@ public class EntityUtils {
      * @return Field[]
      */
     public static Field[] getAllFields(Class<?> clz) {
-        Field[] fields = new Field[]{};
+        Field[] fields = new Field[] {};
         if (Objects.nonNull(clz)) {
             do {
                 fields = ArrayUtils.addAll(fields, clz.getDeclaredFields());
@@ -286,21 +313,24 @@ public class EntityUtils {
         return fields;
     }
 
-
     public static String objectToJSONString(Object obj) {
         return objectToJSONString(obj, DateTimeUtils.DEFAULT_DATETIME_FORMAT);
     }
 
     public static String objectToJSONString(Object obj, String dateFormat) {
         try {
-            return objectMapper.writer().with(new SimpleDateFormat(dateFormat)).writeValueAsString(obj);
+            return objectMapper
+                    .writer()
+                    .with(new SimpleDateFormat(dateFormat))
+                    .writeValueAsString(obj);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return "";
         }
     }
 
-    public static void writeJsonObjectToStream(Object obj, OutputStream outputStream) throws Exception {
+    public static void writeJsonObjectToStream(Object obj, OutputStream outputStream)
+            throws Exception {
         try {
             objectMapper.writer().writeValue(outputStream, obj);
         } catch (Exception e) {
@@ -309,12 +339,14 @@ public class EntityUtils {
         }
     }
 
-    public static <T> T jsonStringToObject(String jsonStr, Class<T> clazz, String dateFormat) throws Exception {
+    public static <T> T jsonStringToObject(String jsonStr, Class<T> clazz, String dateFormat)
+            throws Exception {
 
         return objectMapper.readerFor(clazz).readValue(jsonStr);
     }
 
-    public static <T> T readJsonObjectFromInputStream(InputStream inputStream, Class<T> clazz) throws Exception {
+    public static <T> T readJsonObjectFromInputStream(InputStream inputStream, Class<T> clazz)
+            throws Exception {
         try {
 
             return objectMapper.readerFor(clazz).readValue(inputStream);
@@ -333,14 +365,21 @@ public class EntityUtils {
         return jsonStringToObject(jsonStr, clazz, DateTimeUtils.DEFAULT_DATETIME_FORMAT);
     }
 
-    public static <T> T jsonStringToObject(String jsonStr, String dateFormat, Class<?> collectionClass, Class<?>... elementClasses) throws Exception {
-        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(collectionClass, elementClasses);
+    public static <T> T jsonStringToObject(
+            String jsonStr, String dateFormat, Class<?> collectionClass, Class<?>... elementClasses)
+            throws Exception {
+        JavaType javaType =
+                objectMapper
+                        .getTypeFactory()
+                        .constructParametricType(collectionClass, elementClasses);
 
         return objectMapper.readerFor(javaType).readValue(jsonStr);
     }
 
-    public static <T> T jsonStringToObject(String jsonStr, Class<?> collectionClass, Class<?>... elementClasses) throws Exception {
-        return jsonStringToObject(jsonStr, DateTimeUtils.DEFAULT_DATETIME_FORMAT, collectionClass, elementClasses);
+    public static <T> T jsonStringToObject(
+            String jsonStr, Class<?> collectionClass, Class<?>... elementClasses) throws Exception {
+        return jsonStringToObject(
+                jsonStr, DateTimeUtils.DEFAULT_DATETIME_FORMAT, collectionClass, elementClasses);
     }
 
     /**
@@ -350,88 +389,64 @@ public class EntityUtils {
      * @param targetValueJavaTypeName
      * @return
      */
-    public static Object convertValueByTypeCompatiable(Object sourceValue, String targetValueJavaTypeName) {
+    public static Object convertValueByTypeCompatiable(
+            Object sourceValue, String targetValueJavaTypeName) {
         Object value = sourceValue;
         String type = StringUtils.trimToEmpty(targetValueJavaTypeName);
         if (type.equalsIgnoreCase("Float")) {
-            if (value instanceof Number)
-                value = Float.valueOf(((Number) value).floatValue());
-            else if (value instanceof String)
-                value = Float.parseFloat((String) value);
+            if (value instanceof Number) value = Float.valueOf(((Number) value).floatValue());
+            else if (value instanceof String) value = Float.parseFloat((String) value);
         } else if (type.equalsIgnoreCase("Double")) {
-            if (value instanceof Number)
-                value = Double.valueOf(((Number) value).doubleValue());
-            else if (value instanceof String)
-                value = Double.parseDouble((String) value);
+            if (value instanceof Number) value = Double.valueOf(((Number) value).doubleValue());
+            else if (value instanceof String) value = Double.parseDouble((String) value);
         } else if (type.equalsIgnoreCase("Long")) {
-            if (value instanceof Number)
-                value = Long.valueOf(((Number) value).longValue());
-            else if (value instanceof String)
-                value = Long.parseLong((String) value);
+            if (value instanceof Number) value = Long.valueOf(((Number) value).longValue());
+            else if (value instanceof String) value = Long.parseLong((String) value);
         } else if (type.equalsIgnoreCase("Short")) {
-            if (value instanceof Number)
-                value = Short.valueOf(((Number) value).shortValue());
-            else if (value instanceof String)
-                value = Short.parseShort((String) value);
+            if (value instanceof Number) value = Short.valueOf(((Number) value).shortValue());
+            else if (value instanceof String) value = Short.parseShort((String) value);
         } else if (type.equalsIgnoreCase("Byte")) {
-            if (value instanceof Number)
-                value = Byte.valueOf(((Number) value).byteValue());
-            else if (value instanceof String)
-                value = Byte.parseByte((String) value);
+            if (value instanceof Number) value = Byte.valueOf(((Number) value).byteValue());
+            else if (value instanceof String) value = Byte.parseByte((String) value);
         } else if (type.equalsIgnoreCase("Integer")) {
-            if (value instanceof Number)
-                value = Integer.valueOf(((Number) value).intValue());
-            else if (value instanceof String)
-                value = Integer.parseInt((String) value);
+            if (value instanceof Number) value = Integer.valueOf(((Number) value).intValue());
+            else if (value instanceof String) value = Integer.parseInt((String) value);
         } else if (type.equalsIgnoreCase("BigInteger")) {
-            if (value instanceof Number)
-                value = BigInteger.valueOf(((Number) value).longValue());
+            if (value instanceof Number) value = BigInteger.valueOf(((Number) value).longValue());
             else if (value instanceof String)
                 value = BigInteger.valueOf(Long.parseLong((String) value));
         } else if (type.equalsIgnoreCase("BigDecimal")) {
-            if (value instanceof Number)
-                value = BigDecimal.valueOf(((Number) value).doubleValue());
-            else if (value instanceof String)
-                value = new BigDecimal((String) value);
+            if (value instanceof Number) value = BigDecimal.valueOf(((Number) value).doubleValue());
+            else if (value instanceof String) value = new BigDecimal((String) value);
         } else if (type.equalsIgnoreCase("Date")) {
             if (value instanceof LocalDate)
                 value = DateTimeUtils.localDateToDate((LocalDate) value);
             else if (value instanceof LocalDateTime)
                 value = DateTimeUtils.localDateTimeToDate((LocalDateTime) value);
-            else if (value instanceof String)
-                value = DateTimeUtils.strToDate((String) value);
+            else if (value instanceof String) value = DateTimeUtils.strToDate((String) value);
         } else if (type.equalsIgnoreCase("LocalDate")) {
-            if (value instanceof Date)
-                value = DateTimeUtils.dateToLocalDate((Date) value);
-            else if (value instanceof LocalDateTime)
-                value = ((LocalDateTime) value).toLocalDate();
-            else if (value instanceof String)
-                value = DateTimeUtils.strToLocalDate((String) value);
+            if (value instanceof Date) value = DateTimeUtils.dateToLocalDate((Date) value);
+            else if (value instanceof LocalDateTime) value = ((LocalDateTime) value).toLocalDate();
+            else if (value instanceof String) value = DateTimeUtils.strToLocalDate((String) value);
         } else if (type.equalsIgnoreCase("LocalDateTime")) {
-            if (value instanceof Date)
-                value = DateTimeUtils.dateToLocalDateTime((Date) value);
+            if (value instanceof Date) value = DateTimeUtils.dateToLocalDateTime((Date) value);
             else if (value instanceof LocalDate)
                 value = DateTimeUtils.localDateToLocalDateTime((LocalDate) value);
             else if (value instanceof String)
                 value = DateTimeUtils.strToLocalDateTime((String) value);
         } else if (type.equalsIgnoreCase("LocalTime")) {
-            if (value instanceof Date)
-                value = DateTimeUtils.dateToLocalTime((Date) value);
-            else if (value instanceof LocalDateTime)
-                value = ((LocalDateTime) value).toLocalTime();
-            else if (value instanceof String)
-                value = DateTimeUtils.strToLocalTime((String) value);
+            if (value instanceof Date) value = DateTimeUtils.dateToLocalTime((Date) value);
+            else if (value instanceof LocalDateTime) value = ((LocalDateTime) value).toLocalTime();
+            else if (value instanceof String) value = DateTimeUtils.strToLocalTime((String) value);
         } else if (type.equalsIgnoreCase("String")) {
-            if (value instanceof Number)
-                value = String.valueOf(value);
+            if (value instanceof Number) value = String.valueOf(value);
             else if (value instanceof LocalDate)
                 value = DateTimeUtils.localDateToStr((LocalDate) value);
             else if (value instanceof LocalDateTime)
                 value = DateTimeUtils.localDateTimeToStr((LocalDateTime) value);
             else if (value instanceof LocalTime)
                 value = DateTimeUtils.localTimeToStr((LocalTime) value);
-            else if (value instanceof Date)
-                value = DateTimeUtils.dateToStr((Date) value);
+            else if (value instanceof Date) value = DateTimeUtils.dateToStr((Date) value);
         }
         return value;
     }
@@ -479,7 +494,6 @@ public class EntityUtils {
         }
     }
 
-
     public static <T> T xmlToObject(InputStream inputStream, Class<T> clazz) throws Exception {
         try {
             return xmlMapper.readValue(inputStream, clazz);
@@ -504,7 +518,8 @@ public class EntityUtils {
         }
     }
 
-    public static <T extends Serializable> T deepCopy(T object) throws IOException, ClassNotFoundException {
+    public static <T extends Serializable> T deepCopy(T object)
+            throws IOException, ClassNotFoundException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(object);

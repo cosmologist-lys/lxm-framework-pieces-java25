@@ -1,6 +1,5 @@
 package com.lxm.framework.excel.inf;
 
-
 import com.lxm.framework.excel.parse.result.ExcelVerifyHandlerResult;
 
 /**
@@ -15,5 +14,4 @@ public interface IExcelVerifyHandler<T> {
      * @return ExcelVerifyHandlerResult
      */
     ExcelVerifyHandlerResult verifyHandler(T obj);
-
 }

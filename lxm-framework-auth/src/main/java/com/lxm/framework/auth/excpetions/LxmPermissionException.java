@@ -3,7 +3,6 @@ package com.lxm.framework.auth.excpetions;
 import com.lxm.framework.auth.enums.AuthPrompts;
 import com.lxm.framework.common.auth.errs.AbstractAuthException;
 
-
 /**
  * @Author: Lys
  * @Date 2023/6/14

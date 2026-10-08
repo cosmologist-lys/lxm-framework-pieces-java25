@@ -34,6 +34,4 @@ public interface StoreSession extends Serializable {
     List<?> getList();
 
     List<?> getListThenDelete();
-
-
 }

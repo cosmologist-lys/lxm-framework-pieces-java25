@@ -34,15 +34,24 @@ import java.util.Properties;
  * @Date 2022/3/1
  * @Describe
  **/
-
-@EnableConfigurationProperties({FrameworkDataSourceProperties.class, MybatisPlusConfigProperties.class})
-@MapperScan(basePackages = "${spring.mybatis.mapper-packages:com.lxm}", annotationClass = org.apache.ibatis.annotations.Mapper.class, sqlSessionFactoryRef = "sqlSessionFactory")
+@EnableConfigurationProperties({
+    FrameworkDataSourceProperties.class,
+    MybatisPlusConfigProperties.class
+})
+@MapperScan(
+        basePackages = "${spring.mybatis.mapper-packages:com.lxm}",
+        annotationClass = org.apache.ibatis.annotations.Mapper.class,
+        sqlSessionFactoryRef = "sqlSessionFactory")
 @org.springframework.boot.autoconfigure.AutoConfiguration
-@org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(prefix="lfp.mybatis", name="enabled", havingValue="true")
+@org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(
+        prefix = "lfp.mybatis",
+        name = "enabled",
+        havingValue = "true")
 public class MybatisPlusConfig {
 
     @Bean("beeDataSource")
-    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(name="beeDataSource")
+    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(
+            name = "beeDataSource")
     public BeeDataSource beeDataSource(FrameworkDataSourceProperties dataSourceProperties) {
         return DataSourceUtils.createBeeDataSource(dataSourceProperties);
     }
@@ -63,25 +72,33 @@ public class MybatisPlusConfig {
     }*/
 
     @Bean("parameterInterceptor")
-    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(name="parameterInterceptor")
-    public ParameterInterceptor parameterInterceptor(org.springframework.beans.factory.ObjectProvider<com.lxm.framework.common.principle.PrincipleProvider> principles) {
+    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(
+            name = "parameterInterceptor")
+    public ParameterInterceptor parameterInterceptor(
+            org.springframework.beans.factory.ObjectProvider<
+                            com.lxm.framework.common.principle.PrincipleProvider>
+                    principles) {
         return new ParameterInterceptor(principles.getIfAvailable(() -> () -> null));
     }
 
     @Bean("statementInterceptor")
-    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(name="statementInterceptor")
-    public StatementInterceptor statementInterceptor(org.springframework.beans.factory.ObjectProvider<com.lxm.framework.common.principle.PrincipleProvider> principles) {
+    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(
+            name = "statementInterceptor")
+    public StatementInterceptor statementInterceptor(
+            org.springframework.beans.factory.ObjectProvider<
+                            com.lxm.framework.common.principle.PrincipleProvider>
+                    principles) {
         return new StatementInterceptor(principles.getIfAvailable(() -> () -> null));
     }
 
     @Bean("globalConfig")
-    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(name="globalConfig")
+    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(
+            name = "globalConfig")
     public GlobalConfig globalConfig() {
         var dbConfig = new GlobalConfig.DbConfig();
-        //主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+        // 主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
         dbConfig.setIdType(IdType.INPUT);
-        dbConfig.setLogicDeleteValue("1")
-                .setLogicNotDeleteValue("0");
+        dbConfig.setLogicDeleteValue("1").setLogicNotDeleteValue("0");
         var config = new GlobalConfig();
         return config.setDbConfig(dbConfig)
                 .setBanner(false)
@@ -96,17 +113,24 @@ public class MybatisPlusConfig {
     }*/
 
     @Bean("transactionManager")
-    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(name="transactionManager")
+    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(
+            name = "transactionManager")
     @DependsOn("beeDataSource")
-    public PlatformTransactionManager transactionManager(@Qualifier("beeDataSource") javax.sql.DataSource beeDataSource) {
+    public PlatformTransactionManager transactionManager(
+            @Qualifier("beeDataSource") javax.sql.DataSource beeDataSource) {
         return new DataSourceTransactionManager(beeDataSource);
     }
 
     @Bean("txInterceptor")
-    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(name="txInterceptor")
-    @org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(prefix="lfp.mybatis.transactions", name="enabled", havingValue="true")
+    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(
+            name = "txInterceptor")
+    @org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(
+            prefix = "lfp.mybatis.transactions",
+            name = "enabled",
+            havingValue = "true")
     @DependsOn("transactionManager")
-    public TransactionInterceptor txInterceptor(@Qualifier("transactionManager") PlatformTransactionManager transactionManager) {
+    public TransactionInterceptor txInterceptor(
+            @Qualifier("transactionManager") PlatformTransactionManager transactionManager) {
         var properties = new Properties();
         properties.setProperty("*", "PROPAGATION_REQUIRED,-Exception");
         NameMatchTransactionAttributeSource tas = new NameMatchTransactionAttributeSource();
@@ -118,10 +142,15 @@ public class MybatisPlusConfig {
     }
 
     @Bean("txAdvisor")
-    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(name="txAdvisor")
-    @org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(prefix="lfp.mybatis.transactions", name="enabled", havingValue="true")
+    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(name = "txAdvisor")
+    @org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(
+            prefix = "lfp.mybatis.transactions",
+            name = "enabled",
+            havingValue = "true")
     @DependsOn("txInterceptor")
-    public AspectJExpressionPointcutAdvisor txAdvisor(@Qualifier("txInterceptor") TransactionInterceptor txInterceptor, MybatisPlusConfigProperties mybatisPlusConfigProperties) {
+    public AspectJExpressionPointcutAdvisor txAdvisor(
+            @Qualifier("txInterceptor") TransactionInterceptor txInterceptor,
+            MybatisPlusConfigProperties mybatisPlusConfigProperties) {
         var pointCutAdvisor = new AspectJExpressionPointcutAdvisor();
         pointCutAdvisor.setAdvice(txInterceptor);
         pointCutAdvisor.setExpression(mybatisPlusConfigProperties.getExpression());
@@ -129,31 +158,38 @@ public class MybatisPlusConfig {
     }
 
     @Bean("sqlSessionFactory")
-    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(name="sqlSessionFactory")
+    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(
+            name = "sqlSessionFactory")
     @DependsOn({"beeDataSource", "globalConfig", "parameterInterceptor", "statementInterceptor"})
-    public SqlSessionFactory sqlSessionFactory(@Qualifier("beeDataSource") javax.sql.DataSource druidDataSource,
-                                               @Qualifier("globalConfig") GlobalConfig globalConfig,
-                                               @Qualifier("parameterInterceptor") ParameterInterceptor parameterInterceptor,
-                                               @Qualifier("statementInterceptor") StatementInterceptor statementInterceptor,
-                                               MybatisPlusConfigProperties mybatisPlusConfigProperties
-    ) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(
+            @Qualifier("beeDataSource") javax.sql.DataSource druidDataSource,
+            @Qualifier("globalConfig") GlobalConfig globalConfig,
+            @Qualifier("parameterInterceptor") ParameterInterceptor parameterInterceptor,
+            @Qualifier("statementInterceptor") StatementInterceptor statementInterceptor,
+            MybatisPlusConfigProperties mybatisPlusConfigProperties)
+            throws Exception {
         var configuration = new MybatisConfiguration();
         configuration.setJdbcTypeForNull(mybatisPlusConfigProperties.getJdbcTypeForNull());
         configuration.setCacheEnabled(false);
-        configuration.setMapUnderscoreToCamelCase(mybatisPlusConfigProperties.isMapUnderscoreToCamelCase());
+        configuration.setMapUnderscoreToCamelCase(
+                mybatisPlusConfigProperties.isMapUnderscoreToCamelCase());
         configuration.setCallSettersOnNulls(mybatisPlusConfigProperties.isCallSettersOnNulls());
 
         var sqlSessionFactory = new MybatisSqlSessionFactoryBean();
         sqlSessionFactory.setDataSource(druidDataSource);
-        sqlSessionFactory.setTypeAliasesPackage(mybatisPlusConfigProperties.getTypeAliasesPackage());
+        sqlSessionFactory.setTypeAliasesPackage(
+                mybatisPlusConfigProperties.getTypeAliasesPackage());
         var pathResolver = new PathMatchingResourcePatternResolver();
-        Resource[] resources = pathResolver.getResources(mybatisPlusConfigProperties.getResourcePathPattern());
+        Resource[] resources =
+                pathResolver.getResources(mybatisPlusConfigProperties.getResourcePathPattern());
         sqlSessionFactory.setMapperLocations(resources);
 
         sqlSessionFactory.setConfiguration(configuration);
         var plugins = new com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor();
         plugins.addInnerInterceptor(statementInterceptor);
-        var pagination = new com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor(com.baomidou.mybatisplus.annotation.DbType.MYSQL);
+        var pagination =
+                new com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor(
+                        com.baomidou.mybatisplus.annotation.DbType.MYSQL);
         pagination.setMaxLimit(1000L);
         plugins.addInnerInterceptor(pagination);
         sqlSessionFactory.setPlugins(parameterInterceptor, plugins);

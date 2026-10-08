@@ -24,27 +24,39 @@ import java.util.Arrays;
 public class JsonResultAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
-    public boolean supports(MethodParameter methodParameter, Class<? extends org.springframework.http.converter.HttpMessageConverter<?>> aClass) {
+    public boolean supports(
+            MethodParameter methodParameter,
+            Class<? extends org.springframework.http.converter.HttpMessageConverter<?>> aClass) {
         return true;
     }
 
     @Override
-    public Object beforeBodyWrite(@Nullable Object o, MethodParameter methodParameter, MediaType mediaType, Class<? extends org.springframework.http.converter.HttpMessageConverter<?>> aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
+    public Object beforeBodyWrite(
+            @Nullable Object o,
+            MethodParameter methodParameter,
+            MediaType mediaType,
+            Class<? extends org.springframework.http.converter.HttpMessageConverter<?>> aClass,
+            ServerHttpRequest serverHttpRequest,
+            ServerHttpResponse serverHttpResponse) {
         if (o == null) {
             return null;
         }
         if (o instanceof JsonResult<?> jsonResult) {
-            if (methodParameter.hasMethodAnnotation(JsonResultFilter.class) || methodParameter.hasMethodAnnotation(JsonResultFilters.class)) {
+            if (methodParameter.hasMethodAnnotation(JsonResultFilter.class)
+                    || methodParameter.hasMethodAnnotation(JsonResultFilters.class)) {
                 Annotation[] methodAnnotations = methodParameter.getMethodAnnotations();
-                Arrays.asList(methodAnnotations).forEach(item -> {
-                    if (item instanceof JsonResultFilter) {
-                        var jsonResultFilter = (JsonResultFilter) item;
-                        jsonResult.filter(jsonResultFilter);
-                    } else if (item instanceof JsonResultFilters) {
-                        var jsonResultFilters = (JsonResultFilters) item;
-                        Arrays.asList(jsonResultFilters.value()).forEach(jsonResult::filter);
-                    }
-                });
+                Arrays.asList(methodAnnotations)
+                        .forEach(
+                                item -> {
+                                    if (item instanceof JsonResultFilter) {
+                                        var jsonResultFilter = (JsonResultFilter) item;
+                                        jsonResult.filter(jsonResultFilter);
+                                    } else if (item instanceof JsonResultFilters) {
+                                        var jsonResultFilters = (JsonResultFilters) item;
+                                        Arrays.asList(jsonResultFilters.value())
+                                                .forEach(jsonResult::filter);
+                                    }
+                                });
             }
             return jsonResult;
         } else if (o instanceof Result<?> result) {

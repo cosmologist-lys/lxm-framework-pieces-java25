@@ -19,7 +19,8 @@ public class LxmRouterUtil {
      * @param excludePatterns 要排除的路由匹配符集合
      * @param function        要执行的方法
      */
-    public static void match(List<String> patterns, List<String> excludePatterns, LxmFunction function) {
+    public static void match(
+            List<String> patterns, List<String> excludePatterns, LxmFunction function) {
         if (isMatchCurrURI(patterns)) {
             if (!isMatchCurrURI(excludePatterns)) {
                 function.run();
@@ -63,6 +64,4 @@ public class LxmRouterUtil {
     public static boolean isMatch(String pattern, String path) {
         return AuthManager.getContext().matchPath(pattern, path);
     }
-
-
 }

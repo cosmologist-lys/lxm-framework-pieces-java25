@@ -7,7 +7,7 @@ import java.util.List;
  * @Date 2023/6/14
  * @Describe
  **/
-public class RoleDefaultBlankFilter implements RoleFilter{
+public class RoleDefaultBlankFilter implements RoleFilter {
 
     @Override
     public List<String> getRoleList(String loginId) {

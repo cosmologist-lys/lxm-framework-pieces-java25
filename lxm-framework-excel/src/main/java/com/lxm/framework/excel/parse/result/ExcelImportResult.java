@@ -17,10 +17,12 @@ public class ExcelImportResult<T> {
      * 结果集
      */
     private List<T> list;
+
     /**
      * 失败数据
      */
     private List<ExcelImportErrorResult> failList;
+
     /**
      * 数据处理器失败数据
      */
@@ -30,9 +32,9 @@ public class ExcelImportResult<T> {
      * 成功的数据源
      */
     private Workbook successWorkbook;
+
     /**
      * 失败的数据源
      */
     private Workbook failWorkbook;
-
 }

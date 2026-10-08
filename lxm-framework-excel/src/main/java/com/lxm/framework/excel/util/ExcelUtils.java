@@ -45,13 +45,17 @@ public class ExcelUtils {
      * @return LinkedList<LinkedList < String>> 内层为1行，外层为所有行
      * @throws IOException
      */
-    public static LinkedList<LinkedList<String>> read(MultipartFile file, int sheetNum, int colNum, boolean escapeHeaders) throws IOException {
-        try (var input=file.getInputStream(); var workbook=org.apache.poi.ss.usermodel.WorkbookFactory.create(input)) {
+    public static LinkedList<LinkedList<String>> read(
+            MultipartFile file, int sheetNum, int colNum, boolean escapeHeaders)
+            throws IOException {
+        try (var input = file.getInputStream();
+                var workbook = org.apache.poi.ss.usermodel.WorkbookFactory.create(input)) {
             return read(workbook.getSheetAt(sheetNum), colNum, escapeHeaders);
         }
     }
 
-    private static LinkedList<LinkedList<String>> read(Sheet sheet, int colNum, boolean escapeHeaders) throws IOException {
+    private static LinkedList<LinkedList<String>> read(
+            Sheet sheet, int colNum, boolean escapeHeaders) throws IOException {
         var arrays = new LinkedList<LinkedList<String>>();
         int rowLength = sheet.getLastRowNum();
         for (int i = 0; i <= rowLength; i++) {
@@ -60,10 +64,13 @@ public class ExcelUtils {
             }
             var col = new LinkedList<String>();
             Row oneRow = sheet.getRow(i);
-            int columns=colNum==0 ? (oneRow==null ? 0 : Math.max(0,oneRow.getLastCellNum())) : colNum;
-            var formatter=new org.apache.poi.ss.usermodel.DataFormatter(java.util.Locale.ROOT);
+            int columns =
+                    colNum == 0
+                            ? (oneRow == null ? 0 : Math.max(0, oneRow.getLastCellNum()))
+                            : colNum;
+            var formatter = new org.apache.poi.ss.usermodel.DataFormatter(java.util.Locale.ROOT);
             for (int i1 = 0; i1 < columns; i1++) {
-                col.add(formatter.formatCellValue(oneRow==null ? null : oneRow.getCell(i1)));
+                col.add(formatter.formatCellValue(oneRow == null ? null : oneRow.getCell(i1)));
             }
             arrays.add(col);
         }
@@ -84,21 +91,28 @@ public class ExcelUtils {
         Workbook workbook = new XSSFWorkbook();
         try {
             for (ExcelSingleSheet excelSingleSheet : excelMultiSheets.getSheetList()) {
-                    ExportParams params = excelSingleSheet.getParams();
-                    List<ExcelExportEntity> entities = PoiPublicUtil.createExcelExportEntities(params, excelSingleSheet.getPojoClass());
-                    //对导出对象排序
-                    exportService.sortAllParams(entities);
-                    excelSingleSheet.setExcelExportEntities(entities);
-                    //创建默认样式
-                    IExcelExportStyler exportStyler = new DefaultExcelExportStyler();
-                    exportStyler.createStyles(workbook, entities);
-                    params.setStyle(exportStyler);
-                    Sheet sheet = exportService.createSheet(workbook, params.getSheetName());
-                    //插入数据到表格
-                    exportService.insertDataToSheet(sheet, params, entities, excelSingleSheet.getDataList());
+                ExportParams params = excelSingleSheet.getParams();
+                List<ExcelExportEntity> entities =
+                        PoiPublicUtil.createExcelExportEntities(
+                                params, excelSingleSheet.getPojoClass());
+                // 对导出对象排序
+                exportService.sortAllParams(entities);
+                excelSingleSheet.setExcelExportEntities(entities);
+                // 创建默认样式
+                IExcelExportStyler exportStyler = new DefaultExcelExportStyler();
+                exportStyler.createStyles(workbook, entities);
+                params.setStyle(exportStyler);
+                Sheet sheet = exportService.createSheet(workbook, params.getSheetName());
+                // 插入数据到表格
+                exportService.insertDataToSheet(
+                        sheet, params, entities, excelSingleSheet.getDataList());
             }
         } catch (RuntimeException e) {
-            try { workbook.close(); } catch (IOException closeFailure) { e.addSuppressed(closeFailure); }
+            try {
+                workbook.close();
+            } catch (IOException closeFailure) {
+                e.addSuppressed(closeFailure);
+            }
             throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e);
         }
         return workbook;
@@ -127,7 +141,8 @@ public class ExcelUtils {
      * @param dataList       数据集合
      * @return Workbook
      */
-    public static Workbook export(ExportParams params, List<ExcelExportEntity> exportEntities, List<?> dataList) {
+    public static Workbook export(
+            ExportParams params, List<ExcelExportEntity> exportEntities, List<?> dataList) {
         if (params == null || exportEntities == null) {
             throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
         }
@@ -136,9 +151,9 @@ public class ExcelUtils {
         }
         ExcelExportService exportService = new ExcelExportService();
         Workbook workbook = exportService.createWorkbook(params, dataList.size());
-        //对导出对象排序
+        // 对导出对象排序
         exportService.sortAllParams(exportEntities);
-        //创建默认样式
+        // 创建默认样式
         if (params.getStyle() == null) {
             IExcelExportStyler exportStyler = new DefaultExcelExportStyler();
             exportStyler.createStyles(workbook, exportEntities);
@@ -150,15 +165,15 @@ public class ExcelUtils {
             List<? extends List<?>> lists = PoiPublicUtil.subListByCount(dataList, 60000);
             for (int i = 0; i < lists.size(); i++) {
                 sheet = exportService.createSheet(workbook, sheetName + "_" + (i + 1));
-                //插入数据到表格
+                // 插入数据到表格
                 exportService.insertDataToSheet(sheet, params, exportEntities, lists.get(i));
             }
         } else {
             sheet = exportService.createSheet(workbook, sheetName);
-            //插入数据到表格
+            // 插入数据到表格
             exportService.insertDataToSheet(sheet, params, exportEntities, dataList);
         }
-        //最后一个sheet创建合计信息
+        // 最后一个sheet创建合计信息
         exportService.createStatisticsRow(sheet, params);
         return workbook;
     }
@@ -171,7 +186,8 @@ public class ExcelUtils {
      * @param params    导入参数
      * @return ExcelImportResult
      */
-    public static <T> ExcelImportResult<T> parse(InputStream in, Class<T> pojoClass, ImportParams params) throws Exception {
+    public static <T> ExcelImportResult<T> parse(
+            InputStream in, Class<T> pojoClass, ImportParams params) throws Exception {
         return new ExcelImportService<T>().importExcelByIs(in, pojoClass, params);
     }
 
@@ -215,7 +231,9 @@ public class ExcelUtils {
      */
     public static Workbook htmlToExcel(InputStream is, ExcelType type) {
         try {
-            return htmlToExcel(new String(IOUtils.toByteArray(is), java.nio.charset.StandardCharsets.UTF_8), type);
+            return htmlToExcel(
+                    new String(IOUtils.toByteArray(is), java.nio.charset.StandardCharsets.UTF_8),
+                    type);
         } catch (IOException e) {
             throw new ExcelExportException(ExcelExportEnum.HTML_ERROR, e);
         }

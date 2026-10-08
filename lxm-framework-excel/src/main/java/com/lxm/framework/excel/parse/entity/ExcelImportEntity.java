@@ -16,30 +16,37 @@ public class ExcelImportEntity {
      * 列名
      */
     protected String name;
+
     /**
      * 导出日期格式
      */
     private String format;
+
     /**
      * 替换
      */
     private String[] replace;
+
     /**
      * 字典名称
      */
     private String dict;
+
     /**
      * 后缀
      */
     private String suffix;
+
     /**
      * 枚举导入静态方法
      */
     private String enumImportMethod;
+
     /**
      * set方法
      */
     private Method setMethod;
+
     /**
      * get方法
      */

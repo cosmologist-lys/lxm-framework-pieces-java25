@@ -16,6 +16,7 @@ public class ExcelBaseParams {
      * 数据处理接口,以此为主,replace,format都在这后面
      */
     private IExcelDataHandler dataHandler;
+
     /**
      * 字段处理类
      */

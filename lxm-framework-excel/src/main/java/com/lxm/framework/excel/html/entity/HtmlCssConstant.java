@@ -9,11 +9,14 @@ public interface HtmlCssConstant {
      * constants
      */
     String PATTERN_LENGTH = "\\d*\\.?\\d+\\s*(?:em|ex|cm|mm|q|in|pt|pc|px)?";
+
     String STYLE = "style";
+
     /**
      * direction
      */
     String TOP = "top";
+
     String RIGHT = "right";
     String BOTTOM = "bottom";
     String LEFT = "left";
@@ -44,5 +47,4 @@ public interface HtmlCssConstant {
     String DOUBLE = "double";
     String DOTTED = "dotted";
     String DASHED = "dashed";
-
 }

@@ -31,14 +31,14 @@ public class StandardPrinciple implements Serializable {
         this.defaultValue();
     }
 
-
     public StandardPrinciple(int accountId, String accountName) {
         this.accountName = accountName;
         this.accountId = accountId;
         this.defaultValue();
     }
 
-    public StandardPrinciple(int accountId, String accountName, int userId, String userName, int tenantId) {
+    public StandardPrinciple(
+            int accountId, String accountName, int userId, String userName, int tenantId) {
         this.userName = userName;
         this.accountName = accountName;
         this.userId = userId;
@@ -51,7 +51,6 @@ public class StandardPrinciple implements Serializable {
         this.userId = -1;
         this.userName = null;
     }
-
 
     public String getLoginId() {
         return loginId;
@@ -116,5 +115,4 @@ public class StandardPrinciple implements Serializable {
     public void setTenantId(int tenantId) {
         this.tenantId = tenantId;
     }
-
 }

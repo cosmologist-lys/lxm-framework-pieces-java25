@@ -14,46 +14,55 @@ import java.util.Map;
  */
 public class Pagination<T> implements IPage<T>, StandardPage<T> {
     private static final long serialVersionUID = 1L;
+
     /**
      * 查询数据列表
      */
     private List<T> records = Collections.emptyList();
+
     /**
      * 总数
      */
     private long total = 0;
+
     /**
      * 当前页
      */
     private long current = 1;
+
     /**
      * 每页显示条数，默认 10
      */
     private long size = 10;
+
     /**
      * <p>
      * SQL 排序 ASC 数组
      * </p>
      */
     private String[] ascs;
+
     /**
      * <p>
      * SQL 排序 DESC 数组
      * </p>
      */
     private String[] descs;
+
     /**
      * <p>
      * 自动优化 COUNT SQL
      * </p>
      */
     private boolean optimizeCountSql = true;
+
     /**
      * <p>
      * 是否进行 count 查询
      * </p>
      */
     private boolean searchCount = true;
+
     /**
      * <p>
      * 排序属性描述
@@ -61,8 +70,7 @@ public class Pagination<T> implements IPage<T>, StandardPage<T> {
      */
     private Map<String, String> orderProperty;
 
-    public Pagination() {
-    }
+    public Pagination() {}
 
     /**
      * <p>
@@ -224,12 +232,16 @@ public class Pagination<T> implements IPage<T>, StandardPage<T> {
         List<OrderItem> list = new ArrayList<>();
         if (ascs != null) {
             for (String a : ascs) {
-                list.add(OrderItem.asc(orderProperty == null ? a : orderProperty.getOrDefault(a, a)));
+                list.add(
+                        OrderItem.asc(
+                                orderProperty == null ? a : orderProperty.getOrDefault(a, a)));
             }
         }
         if (descs != null) {
             for (String d : descs) {
-                list.add(OrderItem.desc(orderProperty == null ? d : orderProperty.getOrDefault(d, d)));
+                list.add(
+                        OrderItem.desc(
+                                orderProperty == null ? d : orderProperty.getOrDefault(d, d)));
             }
         }
         return list;
@@ -244,7 +256,7 @@ public class Pagination<T> implements IPage<T>, StandardPage<T> {
         return this;
     }
 
-    //===================================//
+    // ===================================//
 
     @Override
     public void putRecords(List<T> records) {

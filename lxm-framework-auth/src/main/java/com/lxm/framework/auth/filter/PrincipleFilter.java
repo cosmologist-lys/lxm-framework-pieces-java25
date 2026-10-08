@@ -30,7 +30,7 @@ public interface PrincipleFilter {
      * @param role /
      * @return /
      */
-    default List<String> getPermissionListByRole(String role){
+    default List<String> getPermissionListByRole(String role) {
         return null;
     }
 

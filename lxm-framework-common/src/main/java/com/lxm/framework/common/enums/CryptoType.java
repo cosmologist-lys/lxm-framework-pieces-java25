@@ -12,8 +12,7 @@ public enum CryptoType {
     SHA1("sha1"),
     SHA256("sha256"),
     BASE64("base64"),
-    AES("aes")
-    ;
+    AES("aes");
 
     public String getTypeString() {
         return typeString;
@@ -25,7 +24,10 @@ public enum CryptoType {
         this.typeString = typeString;
     }
 
-    public static CryptoType mapping(String type){
-        return Arrays.stream(values()).filter(one -> one.getTypeString().equalsIgnoreCase(type)).findFirst().orElse(MD5);
+    public static CryptoType mapping(String type) {
+        return Arrays.stream(values())
+                .filter(one -> one.getTypeString().equalsIgnoreCase(type))
+                .findFirst()
+                .orElse(MD5);
     }
 }

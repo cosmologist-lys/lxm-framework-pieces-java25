@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
  *              也会有一个基于 {@link com.lxm.framework.common.cache.customized.impl.TimeCache} 的内存的dao实现
  **/
 @Slf4j
-
 @EnableConfigurationProperties(AuthRedisProperties.class)
 public class AuthRedisDefaultPrepare {
 
@@ -47,10 +46,12 @@ public class AuthRedisDefaultPrepare {
             log.debug("lxm-auth redis default prepare , customized dao has been set.");
         } catch (NoSuchBeanDefinitionException e) {
             if (!properties.prepared()) {
-                log.debug("lxm-auth redis default prepare , properties is not set , ignore dao redis default");
+                log.debug(
+                        "lxm-auth redis default prepare , properties is not set , ignore dao redis default");
                 return;
             }
-            throw new IllegalStateException("Enable lfp.auth.enabled or supply a managed LxmTokenDao bean");
+            throw new IllegalStateException(
+                    "Enable lfp.auth.enabled or supply a managed LxmTokenDao bean");
         }
         AuthManager.setTokenDao(dao);
     }

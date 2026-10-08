@@ -9,6 +9,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JsonResultFilter {
     Class<?> type();
+
     String[] include() default {};
+
     String[] exclude() default {};
 }

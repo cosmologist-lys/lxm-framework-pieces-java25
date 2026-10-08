@@ -24,5 +24,4 @@ public interface IExcelDictHandler {
      * @return 返回值
      */
     String importHandler(String dict, String name, Object value);
-
 }

@@ -14,18 +14,18 @@ public class ExcelVerifyHandlerResult {
      * 是否正确
      */
     private boolean success;
+
     /**
      * 错误行号
      */
     private int rowNum;
+
     /**
      * 错误信息
      */
     private String msg;
 
-    public ExcelVerifyHandlerResult() {
-
-    }
+    public ExcelVerifyHandlerResult() {}
 
     public ExcelVerifyHandlerResult(boolean success) {
         this.success = success;
@@ -43,5 +43,4 @@ public class ExcelVerifyHandlerResult {
     public static ExcelVerifyHandlerResult success() {
         return new ExcelVerifyHandlerResult(true);
     }
-
 }

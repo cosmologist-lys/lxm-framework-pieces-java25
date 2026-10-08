@@ -2,8 +2,6 @@ package com.lxm.framework.common.auth.errs;
 
 import com.lxm.framework.common.auth.enums.AuthErrorEnums;
 
-
-
 /**
  * @Author: Lys
  * @Date 2023/1/10
@@ -25,7 +23,7 @@ public class AbstractPrincipleException extends RuntimeException {
         this.authErrorEnums = authErrorEnums;
     }
 
-    public AuthErrorEnums why(){
+    public AuthErrorEnums why() {
         return this.authErrorEnums;
     }
 }

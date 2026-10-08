@@ -20,10 +20,12 @@ public class CacheScheduleScanner<K, V> {
      * 定时任务
      */
     private final ScheduledExecutorService scanner;
+
     /**
      * 扫描周期
      */
     private final int period;
+
     /**
      * 时间单位
      */
@@ -38,44 +40,56 @@ public class CacheScheduleScanner<K, V> {
         this.timeUnit = timeUnit;
         this.cache = cache;
         this.count = new AtomicInteger(0);
-        if (period <= 0 || timeUnit == null) throw new IllegalArgumentException("Positive scan period required");
-        this.scanner = Executors.newSingleThreadScheduledExecutor(task -> {
-            Thread thread = new Thread(task, "lfp-cache-scanner");
-            thread.setDaemon(true);
-            return thread;
-        });
+        if (period <= 0 || timeUnit == null)
+            throw new IllegalArgumentException("Positive scan period required");
+        this.scanner =
+                Executors.newSingleThreadScheduledExecutor(
+                        task -> {
+                            Thread thread = new Thread(task, "lfp-cache-scanner");
+                            thread.setDaemon(true);
+                            return thread;
+                        });
     }
 
-    public static <K, V> CacheScheduleScanner<K, V> build(Cache<K, V> cache, int period, TimeUnit timeUnit) {
+    public static <K, V> CacheScheduleScanner<K, V> build(
+            Cache<K, V> cache, int period, TimeUnit timeUnit) {
         return new CacheScheduleScanner<K, V>(cache, period, timeUnit);
     }
 
     public void scan() {
-        scanner.scheduleAtFixedRate(() -> {
-            try {
-                int scanCount = this.count.getAndIncrement();
-                if (scanCount == 0){
-                    log.debug("schedule-scanner init");
+        scanner.scheduleAtFixedRate(
+                () -> {
+                    try {
+                        int scanCount = this.count.getAndIncrement();
+                        if (scanCount == 0) {
+                            log.debug("schedule-scanner init");
 
-                    return;
-                }
-                String threadTag = Thread.currentThread().getName();
-                log.debug("thead : {} ,scan-count : {}, cache-size : {}", threadTag, scanCount, cache.size());
-                for (CacheTarget<K, V> pair : cache) {
-                    // 检查当前映射，而非删除扫描前已被替换的旧对象。
-                    cache.exist(pair.getKey());
-                }
-            } catch (Exception e) {
-                log.error("cache-schedule-scanner error", e);
-            }
-        }, 0, period, timeUnit);
+                            return;
+                        }
+                        String threadTag = Thread.currentThread().getName();
+                        log.debug(
+                                "thead : {} ,scan-count : {}, cache-size : {}",
+                                threadTag,
+                                scanCount,
+                                cache.size());
+                        for (CacheTarget<K, V> pair : cache) {
+                            // 检查当前映射，而非删除扫描前已被替换的旧对象。
+                            cache.exist(pair.getKey());
+                        }
+                    } catch (Exception e) {
+                        log.error("cache-schedule-scanner error", e);
+                    }
+                },
+                0,
+                period,
+                timeUnit);
     }
 
     public void close() {
         this.scanner.shutdown();
     }
 
-    //=======================
+    // =======================
 
     public int getPeriod() {
         return period;

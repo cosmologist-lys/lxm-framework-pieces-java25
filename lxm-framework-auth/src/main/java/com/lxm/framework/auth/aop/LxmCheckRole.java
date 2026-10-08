@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * @Describe
  **/
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD,ElementType.TYPE})
+@Target({ElementType.METHOD, ElementType.TYPE})
 public @interface LxmCheckRole {
 
     /**
@@ -19,7 +19,7 @@ public @interface LxmCheckRole {
      *
      * @return /
      */
-    String [] value() default {};
+    String[] value() default {};
 
     /**
      * 验证模式：AND | OR，默认AND

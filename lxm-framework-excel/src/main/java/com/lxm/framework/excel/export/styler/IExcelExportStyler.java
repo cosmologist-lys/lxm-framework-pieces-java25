@@ -31,5 +31,4 @@ public interface IExcelExportStyler {
      * @param entity 导出对象
      */
     CellStyle getDataStyle(ExcelExportEntity entity);
-
 }

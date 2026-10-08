@@ -23,5 +23,4 @@ public class ExcelImportErrorResult {
      * 错误数据
      */
     private Object object;
-
 }

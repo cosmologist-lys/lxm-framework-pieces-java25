@@ -21,12 +21,14 @@ public class MongoRootEntity implements Serializable {
 
     /*
 
-     *//**
+    */
+    /**
      * 根据主键id更新
      *
      * @param excludes 排除更新属性
      * @return UpdateResult
-     *//*
+     */
+    /*
     public UpdateResult updateById(String... excludes) {
         return MongoHelper.edit(Query.query(Criteria.where(MongoHelper.getPkName(getClass())).is(pkVal())),
                 Update.fromDocument(MongoHelper.convertToMongoType(this), excludes),
@@ -36,23 +38,27 @@ public class MongoRootEntity implements Serializable {
     }
 
 
-    *//**
+    */
+    /**
      * 根据主键id删除
-     *//*
+     */
+    /*
     public void deleteById() {
         Query query = new Query();
         query.addCriteria(Criteria.where(MongoHelper.getPkName(getClass())).is(pkVal()));
         MongoHelper.remove(query, MongoHelper.getColName(getClass()));
     }
 
-    *//**
+    */
+    /**
      * 获取主键的值
      *
      * @return Serializable
-     *//*
-    public Serializable pkVal() {
-        return (Serializable) ReflectionKit.getFieldValue(this, MongoHelper.getPkName(getClass()));
-    }
+     */
+    /*
+        public Serializable pkVal() {
+            return (Serializable) ReflectionKit.getFieldValue(this, MongoHelper.getPkName(getClass()));
+        }
 
-*/
+    */
 }

@@ -18,7 +18,7 @@ public class ImmutableKey<T> implements Immutable<T> {
     }
 
     private ImmutableKey(T key) {
-        //this.uniq =  (uniq instanceof String) ? (String) uniq : String.valueOf(uniq.hashCode());
+        // this.uniq =  (uniq instanceof String) ? (String) uniq : String.valueOf(uniq.hashCode());
         this.key = key;
     }
 

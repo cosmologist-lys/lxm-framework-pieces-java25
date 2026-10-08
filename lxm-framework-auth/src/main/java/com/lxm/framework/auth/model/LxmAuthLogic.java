@@ -7,7 +7,6 @@ import com.lxm.framework.auth.consts.AuthConstants;
  * @Date 2023/6/1
  * @Describe
  **/
-
 public interface LxmAuthLogic {
 
     /**
@@ -48,14 +47,14 @@ public interface LxmAuthLogic {
      * @param loginId  /
      * @param forbidTime  /
      */
-    void forbid(String loginId,long forbidTime);
+    void forbid(String loginId, long forbidTime);
 
     /**
      * 通过token禁用
      * @param token  /
      * @param forbidTime  /
      */
-    void forbidByToken(String token,long forbidTime);
+    void forbidByToken(String token, long forbidTime);
 
     /**
      * 启用forbid的账号
@@ -86,5 +85,4 @@ public interface LxmAuthLogic {
      * @return login-id
      */
     String getLoginId();
-
 }

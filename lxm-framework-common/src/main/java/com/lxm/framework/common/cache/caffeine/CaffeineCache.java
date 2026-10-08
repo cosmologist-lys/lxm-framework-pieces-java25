@@ -16,12 +16,13 @@ public class CaffeineCache {
     private static final Cache<String, Object> cache;
 
     static {
-        cache = Caffeine.newBuilder()
-                // 默认缓存1小时最多
-                .expireAfterWrite(1, TimeUnit.HOURS)
-                .maximumSize(50000L)
-                .initialCapacity(1000)
-                .build();
+        cache =
+                Caffeine.newBuilder()
+                        // 默认缓存1小时最多
+                        .expireAfterWrite(1, TimeUnit.HOURS)
+                        .maximumSize(50000L)
+                        .initialCapacity(1000)
+                        .build();
     }
 
     public static boolean hasKey(String key) {
@@ -46,5 +47,4 @@ public class CaffeineCache {
     public static void write(String key, Object value) {
         cache.put(key, value);
     }
-
 }

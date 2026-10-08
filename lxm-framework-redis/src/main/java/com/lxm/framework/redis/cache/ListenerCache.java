@@ -19,7 +19,8 @@ public class ListenerCache {
         cache = new PermanentCache<String, RedisOnRemoveListener>(128);
     }
 
-    public static void putListener(String prefix, @NonNull String key, @NonNull RedisOnRemoveListener listener) {
+    public static void putListener(
+            String prefix, @NonNull String key, @NonNull RedisOnRemoveListener listener) {
         String tag = formatKey(prefix, key);
         cache.put(tag, listener);
     }
@@ -31,9 +32,9 @@ public class ListenerCache {
         return listener;
     }
 
-    public static RedisOnRemoveListener getListenerThenRemove(@NonNull String formatKey){
+    public static RedisOnRemoveListener getListenerThenRemove(@NonNull String formatKey) {
         final RedisOnRemoveListener redisOnRemoveListener = cache.get(formatKey);
-        if (null != redisOnRemoveListener){
+        if (null != redisOnRemoveListener) {
             cache.remove(formatKey);
         }
         return redisOnRemoveListener;

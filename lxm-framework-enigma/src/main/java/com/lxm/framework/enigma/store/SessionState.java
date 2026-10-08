@@ -5,11 +5,12 @@ import java.util.*;
 /** 仅供存储事务内部使用；Redis 保存的是整条记录的认证密文。 */
 public final class SessionState {
     public String sid;
-    public Map<String,String> owner;
+    public Map<String, String> owner;
     public String currentKid;
     public boolean revoked;
     public long retainUntil;
-    public Map<String,KeyVersion> keys=new HashMap<>();
+    public Map<String, KeyVersion> keys = new HashMap<>();
+
     public static final class KeyVersion {
         public String kid;
         public String requestEncryption;
@@ -23,8 +24,8 @@ public final class SessionState {
         public long retryUntil;
         public int requestUses;
         public int responseUses;
-        public Map<String,Long> nonces=new HashMap<>();
-        public Set<String> requestIvs=new HashSet<>();
-        public Set<String> responseIvs=new HashSet<>();
+        public Map<String, Long> nonces = new HashMap<>();
+        public Set<String> requestIvs = new HashSet<>();
+        public Set<String> responseIvs = new HashSet<>();
     }
 }

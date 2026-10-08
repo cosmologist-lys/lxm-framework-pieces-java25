@@ -51,7 +51,7 @@ public interface LxmRequest {
      * @param key 键
      * @param value 值
      */
-    void set(@NonNull String key,@NonNull Object value);
+    void set(@NonNull String key, @NonNull Object value);
 
     /**
      * 在 [Request作用域] 里获取一个值

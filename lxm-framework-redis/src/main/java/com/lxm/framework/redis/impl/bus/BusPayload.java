@@ -16,13 +16,13 @@ public class BusPayload implements BusPublisherSession.BusPayloadInf {
     private final RedisTemplate<String, Object> session;
     private final Set<String> topics;
 
-    public BusPayload(RedisTemplate<String, Object> session,  Set<String> topics) {
+    public BusPayload(RedisTemplate<String, Object> session, Set<String> topics) {
         this.session = session;
         this.topics = topics;
     }
 
     @Override
     public BusPublisherSession.BusPubInf payload(@NonNull Object payload) {
-        return new BusPub(session,topics,payload);
+        return new BusPub(session, topics, payload);
     }
 }

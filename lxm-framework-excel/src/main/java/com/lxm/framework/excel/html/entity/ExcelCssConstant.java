@@ -10,5 +10,4 @@ public interface ExcelCssConstant {
     String SHEET_NAME = "sheetName";
     String FREEZE_ROW = "freezeRow";
     String FREEZE_COL = "freezeCol";
-
 }

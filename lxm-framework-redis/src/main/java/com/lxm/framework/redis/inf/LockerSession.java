@@ -23,7 +23,6 @@ public interface LockerSession {
      */
     void releaseLock();
 
-
     /**
      * 获取资源
      *
@@ -45,6 +44,4 @@ public interface LockerSession {
      * @param anything
      */
     void accessResourceThenRelease(Runnable anything) throws RedisLockerOccupiedException;
-
-
 }

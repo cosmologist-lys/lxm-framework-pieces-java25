@@ -38,5 +38,4 @@ public interface GenericSession {
      * @return
      */
     GenericSession listener(RedisOnRemoveListener redisOnRemoveListener);
-
 }

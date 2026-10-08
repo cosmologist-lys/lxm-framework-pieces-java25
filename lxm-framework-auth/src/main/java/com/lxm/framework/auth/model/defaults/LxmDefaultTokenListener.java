@@ -12,21 +12,21 @@ import lombok.extern.slf4j.Slf4j;
 public class LxmDefaultTokenListener implements LxmTokenListener {
 
     @Override
-    public void signIn(String loginId, String token) {
-    }
+    public void signIn(String loginId, String token) {}
 
     @Override
-    public void createSession(String loginId, String token) {
-    }
+    public void createSession(String loginId, String token) {}
 
     @Override
     public void signOut(String loginId, String device) {
-        log.debug("lxm-auth action <sign-out> caught by listener , loginId : {} , device : {}", loginId, device);
+        log.debug(
+                "lxm-auth action <sign-out> caught by listener , loginId : {} , device : {}",
+                loginId,
+                device);
     }
 
     @Override
-    public void tourist(String loginId, String token) {
-    }
+    public void tourist(String loginId, String token) {}
 
     @Override
     public void deleteSession(String loginId) {
@@ -35,7 +35,10 @@ public class LxmDefaultTokenListener implements LxmTokenListener {
 
     @Override
     public void forbid(String loginId, long forbidTime) {
-        log.debug("lxm-auth action <forbid> caught by listener , loginId : {} , forbidTime : {}", loginId, forbidTime);
+        log.debug(
+                "lxm-auth action <forbid> caught by listener , loginId : {} , forbidTime : {}",
+                loginId,
+                forbidTime);
     }
 
     @Override

@@ -9,6 +9,5 @@ import java.util.Properties;
  **/
 public interface EmailCategory {
 
-
     Properties props();
 }

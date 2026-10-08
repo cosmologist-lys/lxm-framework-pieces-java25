@@ -15,29 +15,62 @@ import java.lang.reflect.Type;
 public final class EnigmaBodyAdvice extends RequestBodyAdviceAdapter {
     private final EnigmaProtocol protocol;
     private final EnigmaProperties properties;
-    public EnigmaBodyAdvice(EnigmaProtocol protocol,EnigmaProperties properties) { this.protocol=protocol;this.properties=properties; }
+
+    public EnigmaBodyAdvice(EnigmaProtocol protocol, EnigmaProperties properties) {
+        this.protocol = protocol;
+        this.properties = properties;
+    }
+
     private ProtectedContext context() {
-        var attributes=RequestContextHolder.getRequestAttributes();
+        var attributes = RequestContextHolder.getRequestAttributes();
         if (!(attributes instanceof ServletRequestAttributes servlet)) return null;
-        return (ProtectedContext)servlet.getRequest().getAttribute(EnigmaInterceptor.CONTEXT);
+        return (ProtectedContext) servlet.getRequest().getAttribute(EnigmaInterceptor.CONTEXT);
     }
-    public boolean supports(MethodParameter parameter,Type type,Class<? extends HttpMessageConverter<?>> converter) {
-        var context=context();return context!=null && "ENCRYPT".equals(context.request.mode());
+
+    public boolean supports(
+            MethodParameter parameter,
+            Type type,
+            Class<? extends HttpMessageConverter<?>> converter) {
+        var context = context();
+        return context != null && "ENCRYPT".equals(context.request.mode());
     }
+
     @Override
-    public HttpInputMessage beforeBodyRead(HttpInputMessage message,MethodParameter parameter,Type type,Class<? extends HttpMessageConverter<?>> converter) throws IOException {
-        var context=context();if (context==null || !org.springframework.http.converter.json.JacksonJsonHttpMessageConverter.class.isAssignableFrom(converter)) throw EnigmaException.protocol();
-        byte[] encrypted=message.getBody().readNBytes(properties.getMaxEnvelopeBytes()+1);
-        if (encrypted.length>properties.getMaxEnvelopeBytes()) throw EnigmaException.protocol();
-        byte[] plaintext=protocol.decrypt(context,encrypted);
-        var headers=new HttpHeaders();headers.putAll(message.getHeaders());headers.setContentLength(plaintext.length);headers.setContentType(MediaType.APPLICATION_JSON);
+    public HttpInputMessage beforeBodyRead(
+            HttpInputMessage message,
+            MethodParameter parameter,
+            Type type,
+            Class<? extends HttpMessageConverter<?>> converter)
+            throws IOException {
+        var context = context();
+        if (context == null
+                || !org.springframework.http.converter.json.JacksonJsonHttpMessageConverter.class
+                        .isAssignableFrom(converter)) throw EnigmaException.protocol();
+        byte[] encrypted = message.getBody().readNBytes(properties.getMaxEnvelopeBytes() + 1);
+        if (encrypted.length > properties.getMaxEnvelopeBytes()) throw EnigmaException.protocol();
+        byte[] plaintext = protocol.decrypt(context, encrypted);
+        var headers = new HttpHeaders();
+        headers.putAll(message.getHeaders());
+        headers.setContentLength(plaintext.length);
+        headers.setContentType(MediaType.APPLICATION_JSON);
         return new HttpInputMessage() {
-            public InputStream getBody() { return new ByteArrayInputStream(plaintext); }
-            public HttpHeaders getHeaders() { return headers; }
+            public InputStream getBody() {
+                return new ByteArrayInputStream(plaintext);
+            }
+
+            public HttpHeaders getHeaders() {
+                return headers;
+            }
         };
     }
+
     @Override
-    public Object handleEmptyBody(Object body,HttpInputMessage message,MethodParameter parameter,Type type,Class<? extends HttpMessageConverter<?>> converter) {
+    public Object handleEmptyBody(
+            Object body,
+            HttpInputMessage message,
+            MethodParameter parameter,
+            Type type,
+            Class<? extends HttpMessageConverter<?>> converter) {
         throw EnigmaException.protocol();
     }
 }

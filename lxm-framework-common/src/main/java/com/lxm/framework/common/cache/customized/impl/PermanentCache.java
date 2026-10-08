@@ -7,7 +7,6 @@ import com.lxm.framework.common.cache.customized.inf.CacheListener;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 /**
  * @Author: Lys
  * @Date 2023/1/13
@@ -40,6 +39,6 @@ public class PermanentCache<K, V> extends AbstractCache<K, V> {
      */
     @Override
     public void expireListener(CacheListener<K, V> listener) {
-        throw new AppException(-1,"only unsupported for time-schedule cache");
+        throw new AppException(-1, "only unsupported for time-schedule cache");
     }
 }

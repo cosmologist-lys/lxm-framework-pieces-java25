@@ -39,13 +39,17 @@ public final class RedisStorage implements GenericSession {
         return new RedisStorage(session);
     }
 
-    private void parameters(String prefix, String key, Long expire, TimeUnit timeUnit, RedisOnRemoveListener listener) {
+    private void parameters(
+            String prefix,
+            String key,
+            Long expire,
+            TimeUnit timeUnit,
+            RedisOnRemoveListener listener) {
         core.setPrefix(prefix).setKey(key).setTimeUnit(timeUnit).setListener(listener);
         if (null != expire) {
             core.setExpire(expire);
         }
     }
-
 
     @Override
     public GenericSession key(String key) {
@@ -125,6 +129,4 @@ public final class RedisStorage implements GenericSession {
         ListenerCache.putListener(core.getPrefix(), core.getKey(), redisOnRemoveListener);
         return this;
     }
-
-
 }

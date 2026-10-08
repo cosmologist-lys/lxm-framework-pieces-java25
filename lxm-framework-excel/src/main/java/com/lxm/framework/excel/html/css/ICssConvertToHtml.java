@@ -23,11 +23,10 @@ import org.apache.poi.ss.usermodel.CellStyle;
  * CSS Cell Style 转换类
  */
 public interface ICssConvertToHtml {
-	/**
-	 * 把Excel单元格样式转换成HTML样式
-	 * @param cell
-	 *
-	 */
+    /**
+     * 把Excel单元格样式转换成HTML样式
+     * @param cell
+     *
+     */
     public String convertToHtml(Cell cell, CellStyle cellStyle, CellStyleEntity style);
-
 }

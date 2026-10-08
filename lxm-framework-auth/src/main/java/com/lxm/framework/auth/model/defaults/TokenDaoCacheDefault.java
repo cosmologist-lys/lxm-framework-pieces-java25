@@ -87,7 +87,7 @@ public class TokenDaoCacheDefault implements LxmTokenDao, AutoCloseable {
     @Override
     public void setForbid(String loginId, long timeout) {
         String key = AuthConstants.TOKEN_FORBID_TAG.concat(loginId);
-        tokenCache.put(key,loginId,timeout,SEC_UNIT);
+        tokenCache.put(key, loginId, timeout, SEC_UNIT);
     }
 
     @Override
@@ -101,6 +101,10 @@ public class TokenDaoCacheDefault implements LxmTokenDao, AutoCloseable {
         String key = AuthConstants.TOKEN_FORBID_TAG.concat(loginId);
         tokenCache.remove(key);
     }
+
     @Override
-    public void close() { tokenCache.close(); sessionCache.close(); }
+    public void close() {
+        tokenCache.close();
+        sessionCache.close();
+    }
 }

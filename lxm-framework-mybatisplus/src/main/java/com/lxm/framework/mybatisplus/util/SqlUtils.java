@@ -10,7 +10,6 @@ import java.util.Objects;
  */
 public class SqlUtils {
 
-
     /**
      * 返回数据库类型
      *
@@ -325,9 +324,25 @@ public class SqlUtils {
         }*/
         String res;
         if (dbType == DbType.SQL_SERVER || dbType == DbType.SQL_SERVER2005) {
-            res = "DATEDIFF(day,DATE_FORMAT(" + column + ", '" + pattern + "'),#{" + expression + "})";
+            res =
+                    "DATEDIFF(day,DATE_FORMAT("
+                            + column
+                            + ", '"
+                            + pattern
+                            + "'),#{"
+                            + expression
+                            + "})";
         } else if (DbType.ORACLE == dbType) {
-            res = "ROUND(TO_NUMBER(TO_CHAR(" + expression + ", '" + pattern + "') - TO_CHAR(" + column + ", '" + pattern + "')))";
+            res =
+                    "ROUND(TO_NUMBER(TO_CHAR("
+                            + expression
+                            + ", '"
+                            + pattern
+                            + "') - TO_CHAR("
+                            + column
+                            + ", '"
+                            + pattern
+                            + "')))";
         } else {
             res = "DATEDIFF(#{" + expression + "},DATE_FORMAT(" + column + ", '" + pattern + "'))";
         }
@@ -376,5 +391,4 @@ public class SqlUtils {
         }
         return res;
     }
-
 }

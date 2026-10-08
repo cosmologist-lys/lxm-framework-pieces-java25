@@ -16,8 +16,8 @@ public class UrlUtils {
 
     private static final String DASH = "://";
 
-    public static String getBaseUrl(String url){
-        if (!StringUtils.startsWith(url,PROTOCOL)){
+    public static String getBaseUrl(String url) {
+        if (!StringUtils.startsWith(url, PROTOCOL)) {
             return null;
         }
         try {
@@ -31,11 +31,11 @@ public class UrlUtils {
         return null;
     }
 
-    public static String getUri(String url){
-        if (!StringUtils.startsWith(url,PROTOCOL)){
+    public static String getUri(String url) {
+        if (!StringUtils.startsWith(url, PROTOCOL)) {
             return url;
         }
         String baseUrl = getBaseUrl(url);
-        return StringUtils.replace(url,baseUrl,"");
+        return StringUtils.replace(url, baseUrl, "");
     }
 }

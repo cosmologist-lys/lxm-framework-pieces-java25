@@ -7,7 +7,7 @@ import lombok.NonNull;
  * @Date 2023/5/12
  * @Describe
  **/
-public interface BusTopic<T>{
+public interface BusTopic<T> {
 
     T topic(@NonNull String topic);
 

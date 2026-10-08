@@ -38,5 +38,4 @@ public interface IExcelDataHandler {
      * @return Hyperlink
      */
     Hyperlink getHyperlink(CreationHelper creationHelper, Object obj, String name, Object value);
-
 }

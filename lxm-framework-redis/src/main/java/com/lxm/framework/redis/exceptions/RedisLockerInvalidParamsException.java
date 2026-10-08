@@ -14,7 +14,9 @@ public class RedisLockerInvalidParamsException extends AppException {
         return -99223;
     }
 
-    public RedisLockerInvalidParamsException(){
-        super(-99223,"invalid params of lxm-redis-locker , maybe duration-time is greater than expire-time");
+    public RedisLockerInvalidParamsException() {
+        super(
+                -99223,
+                "invalid params of lxm-redis-locker , maybe duration-time is greater than expire-time");
     }
 }

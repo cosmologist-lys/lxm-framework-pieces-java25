@@ -9,9 +9,8 @@ import java.util.function.BiConsumer;
  **/
 public interface BusSubscriberSession extends BusTopic<BusSubscriberSession.BusConsumerInf> {
 
-
     interface BusConsumerInf {
-        BusSubInf consumer(BiConsumer<String,Object> consumer);
+        BusSubInf consumer(BiConsumer<String, Object> consumer);
     }
 
     interface BusSubInf {

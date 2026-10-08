@@ -17,7 +17,7 @@ public class LxmPathMatcherHolder {
      * @return 路由匹配器
      */
     public static PathMatcher getPathMatcher() {
-        if(pathMatcher == null) {
+        if (pathMatcher == null) {
             pathMatcher = new AntPathMatcher();
         }
         return pathMatcher;
@@ -30,5 +30,4 @@ public class LxmPathMatcherHolder {
     public static void setPathMatcher(PathMatcher pathMatcher) {
         LxmPathMatcherHolder.pathMatcher = pathMatcher;
     }
-
 }

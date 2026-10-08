@@ -16,12 +16,13 @@ import org.springframework.util.PathMatcher;
  * token-dao的redis注册，在{@link com.lxm.framework.auth.redis.AuthRedisDefaultPrepare}里
  **/
 @Slf4j
-
 @EnableConfigurationProperties(LxmTokenProperties.class)
 public class LxmAuthSpringAutowired {
 
     @Autowired
-    public void setTokenDao(LxmTokenDao dao) { AuthManager.setTokenDao(dao); }
+    public void setTokenDao(LxmTokenDao dao) {
+        AuthManager.setTokenDao(dao);
+    }
 
     @Autowired
     public void setProperties(LxmTokenProperties properties) {
@@ -36,7 +37,7 @@ public class LxmAuthSpringAutowired {
     }
 
     @Autowired(required = false)
-    public void setPrincipleFilter(PrincipleFilter principleFilter){
+    public void setPrincipleFilter(PrincipleFilter principleFilter) {
         log.debug("lxm-auth spring autowired,set principle filter success");
         AuthManager.setPrincipleFilter(principleFilter);
     }
@@ -45,6 +46,4 @@ public class LxmAuthSpringAutowired {
     public void setPathMatcher(PathMatcher pathMatcher) {
         LxmPathMatcherHolder.setPathMatcher(pathMatcher);
     }
-
-
 }

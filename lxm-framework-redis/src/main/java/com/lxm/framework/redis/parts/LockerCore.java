@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
  * @Date 2023/5/8
  * @Describe
  **/
-
 public class LockerCore extends AbstractRedisPartCore {
 
     private static final long serialVersionUID = -3396506124740791159L;
@@ -68,6 +67,4 @@ public class LockerCore extends AbstractRedisPartCore {
         this.duration = duration;
         return this;
     }
-
-
 }

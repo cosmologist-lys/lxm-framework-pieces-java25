@@ -41,7 +41,12 @@ public class TokenDaoRedisDefault implements LxmTokenDao, AutoCloseable {
         clientConfigBuilder.database(properties.getDatabase());
         DefaultJedisClientConfig clientConfig = clientConfigBuilder.build();
         HostAndPort hostAndPort = new HostAndPort(properties.getHost(), properties.getPort());
-        this.jedis = new JedisPooled(poolConfig, hostAndPort, clientConfig);
+        this.jedis =
+                RedisClient.builder()
+                        .hostAndPort(hostAndPort)
+                        .clientConfig(clientConfig)
+                        .poolConfig(poolConfig)
+                        .build();
     }
 
     @Override
@@ -56,7 +61,8 @@ public class TokenDaoRedisDefault implements LxmTokenDao, AutoCloseable {
 
     @Override
     public void update(@NonNull String key, @NonNull String value, long timeout) {
-        jedis.set(key, value, timeout > 0 ? new SetParams().xx().ex(timeout) : new SetParams().xx());
+        jedis.set(
+                key, value, timeout > 0 ? new SetParams().xx().ex(timeout) : new SetParams().xx());
     }
 
     @Override
@@ -94,7 +100,10 @@ public class TokenDaoRedisDefault implements LxmTokenDao, AutoCloseable {
         String loginId = session.getLoginId();
         try {
             String sessionString = om.writeValueAsString(session);
-            jedis.set(loginId, sessionString, timeout > 0 ? SetParams.setParams().ex(timeout) : SetParams.setParams());
+            jedis.set(
+                    loginId,
+                    sessionString,
+                    timeout > 0 ? SetParams.setParams().ex(timeout) : SetParams.setParams());
         } catch (Exception e) {
             throw new IllegalStateException("Cannot persist auth session", e);
         }
@@ -102,7 +111,10 @@ public class TokenDaoRedisDefault implements LxmTokenDao, AutoCloseable {
 
     @Override
     public void updateSession(@NonNull LxmSession session, long timeout) {
-        jedis.set(session.getLoginId(), om.writeValueAsString(session), timeout > 0 ? SetParams.setParams().xx().ex(timeout) : SetParams.setParams().xx());
+        jedis.set(
+                session.getLoginId(),
+                om.writeValueAsString(session),
+                timeout > 0 ? SetParams.setParams().xx().ex(timeout) : SetParams.setParams().xx());
     }
 
     @Override
@@ -113,7 +125,10 @@ public class TokenDaoRedisDefault implements LxmTokenDao, AutoCloseable {
     @Override
     public void setForbid(String loginId, long timeout) {
         String key = AuthConstants.TOKEN_FORBID_TAG.concat(loginId);
-        jedis.set(key, loginId, timeout > 0 ? SetParams.setParams().ex(timeout) : SetParams.setParams());
+        jedis.set(
+                key,
+                loginId,
+                timeout > 0 ? SetParams.setParams().ex(timeout) : SetParams.setParams());
     }
 
     @Override
@@ -204,5 +219,7 @@ public class TokenDaoRedisDefault implements LxmTokenDao, AutoCloseable {
         tokenRedis.delete(key);
     }*/
     @Override
-    public void close() { jedis.close(); }
+    public void close() {
+        jedis.close();
+    }
 }

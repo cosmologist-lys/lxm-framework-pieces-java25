@@ -1,11 +1,9 @@
 package com.lxm.framework.web.jsonresult;
 
-
 import com.lxm.framework.common.web.JsonResultInterface;
 import com.lxm.framework.common.web.Result;
 import com.lxm.framework.web.jsonresult.annotation.JsonResultFilter;
 import com.lxm.framework.web.jsonresult.filter.JsonResultProvider;
-
 
 import java.util.List;
 import java.util.Map;
@@ -15,14 +13,9 @@ import java.util.Map;
  */
 public class JsonResult<T> implements JsonResultInterface<T> {
 
-
-
     private static final long serialVersionUID = 6398711247548069496L;
 
-
     private JsonResultProvider jsonResultProvider = null;
-
-
 
     private int code = 0;
 
@@ -71,7 +64,6 @@ public class JsonResult<T> implements JsonResultInterface<T> {
 
     public static JsonResult<List<?>> select2(int code, List<?> list) {
         return json(code, "", list);
-
     }
 
     public static JsonResult<List<?>> select2(List<?> list) {
@@ -82,7 +74,8 @@ public class JsonResult<T> implements JsonResultInterface<T> {
         return json(result.getCode(), result.getMessage(), result.getReturnValue());
     }
 
-    public static JsonResult<? extends Map<String, Object>> ofMap(Result<? extends Map<String, Object>> result) {
+    public static JsonResult<? extends Map<String, Object>> ofMap(
+            Result<? extends Map<String, Object>> result) {
         return json(result.getCode(), result.getMessage(), result.getReturnValue());
     }
 
@@ -107,7 +100,6 @@ public class JsonResult<T> implements JsonResultInterface<T> {
             chkProviderIsNull();
             this.jsonResultProvider.exclude(jsonResultFilter.type(), jsonResultFilter.exclude());
         }
-
     }
 
     private void chkProviderIsNull() {
@@ -155,5 +147,4 @@ public class JsonResult<T> implements JsonResultInterface<T> {
     public void setJsonResultProvider(JsonResultProvider jsonResultProvider) {
         this.jsonResultProvider = jsonResultProvider;
     }
-
 }

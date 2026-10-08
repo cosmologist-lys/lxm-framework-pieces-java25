@@ -80,8 +80,12 @@ public class ExcelExportService {
         Map<String, List<ExcelExportEntity>> groupMap = new HashMap<>(4);
         for (int i = exportEntities.size() - 1; i > -1; i--) {
             // 集合内部排序
-            if (exportEntities.get(i).getList() != null && exportEntities.get(i).getList().size() > 0) {
-                exportEntities.get(i).getList().sort(Comparator.comparingInt(ExcelExportEntity::getOrderNum));
+            if (exportEntities.get(i).getList() != null
+                    && exportEntities.get(i).getList().size() > 0) {
+                exportEntities
+                        .get(i)
+                        .getList()
+                        .sort(Comparator.comparingInt(ExcelExportEntity::getOrderNum));
             } else {
                 if (StringUtils.isNotBlank(exportEntities.get(i).getGroupName())) {
                     if (!groupMap.containsKey(exportEntities.get(i).getGroupName())) {
@@ -101,13 +105,14 @@ public class ExcelExportService {
                 boolean isInsert = false;
                 for (int i = 0; i < exportEntities.size(); i++) {
                     // 跳过groupName 的元素,防止破会内部结构
-                    if (exportEntities.get(i).getOrderNum() > entry.getValue().get(0).getOrderNum()) {
+                    if (exportEntities.get(i).getOrderNum()
+                            > entry.getValue().get(0).getOrderNum()) {
                         exportEntities.addAll(i, entry.getValue());
                         isInsert = true;
                         break;
                     }
                 }
-                //如果都比他小就插入到最后
+                // 如果都比他小就插入到最后
                 if (!isInsert) {
                     exportEntities.addAll(entry.getValue());
                 }
@@ -123,23 +128,28 @@ public class ExcelExportService {
      * @param exportEntities 导出实体
      * @param dataSet        数据列表
      */
-    public void insertDataToSheet(Sheet sheet, ExportParams params, List<ExcelExportEntity> exportEntities, Collection<?> dataSet) {
+    public void insertDataToSheet(
+            Sheet sheet,
+            ExportParams params,
+            List<ExcelExportEntity> exportEntities,
+            Collection<?> dataSet) {
         try {
             // 创建标题和表头
             int rowIndex = createHeaderAndTitle(sheet, params, exportEntities);
-            //数据开始行数
+            // 数据开始行数
             int dataStartIndex = rowIndex;
             // 设置单元格宽度和是否隐藏
             setCellWithAndHidden(sheet, exportEntities);
-            //当前序号
+            // 当前序号
             AtomicInteger currentIndex = new AtomicInteger();
             for (Object t : dataSet) {
-                rowIndex += createData(sheet, rowIndex, t, params, exportEntities, currentIndex, 0)[0];
+                rowIndex +=
+                        createData(sheet, rowIndex, t, params, exportEntities, currentIndex, 0)[0];
             }
             if (params.getFreezeCol() != 0) {
                 sheet.createFreezePane(params.getFreezeCol(), 0, params.getFreezeCol(), 0);
             }
-            //值相同合并单元格
+            // 值相同合并单元格
             mergeCells(sheet, exportEntities, dataStartIndex);
         } catch (Exception e) {
             throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e.getCause());
@@ -154,7 +164,8 @@ public class ExcelExportService {
      * @param exportEntities 导出实体
      * @return 行数
      */
-    private int createHeaderAndTitle(Sheet sheet, ExportParams params, List<ExcelExportEntity> exportEntities) {
+    private int createHeaderAndTitle(
+            Sheet sheet, ExportParams params, List<ExcelExportEntity> exportEntities) {
         int rowIndex = 0;
         if (params.isCreateTitle()) {
             rowIndex += createTitle(sheet, params, exportEntities);
@@ -176,20 +187,21 @@ public class ExcelExportService {
      * @param exportEntities 导出实体
      * @return 行数
      */
-    private int createTitle(Sheet sheet, ExportParams params, List<ExcelExportEntity> exportEntities) {
+    private int createTitle(
+            Sheet sheet, ExportParams params, List<ExcelExportEntity> exportEntities) {
         Row row = sheet.createRow(0);
         row.setHeight(params.getTitleHeight());
-        //获取标题样式
+        // 获取标题样式
         CellStyle titleStyle = params.getStyle().getTitleStyle(params.getTitleColor());
-        //创建标题单元格
+        // 创建标题单元格
         createCell(params.getType(), row, 0, params.getTitle(), titleStyle, null);
         int fieldWidth = PoiPublicUtil.getFieldLength(exportEntities);
         for (int i = 1; i <= fieldWidth; i++) {
             createCell(params.getType(), row, i, "", titleStyle, null);
         }
-        //合并标题单元格
+        // 合并标题单元格
         PoiPublicUtil.addMergedRegion(sheet, 0, 0, 0, fieldWidth);
-        //是否第二标题
+        // 是否第二标题
         if (params.getSecondTitle() != null) {
             row = sheet.createRow(1);
             row.setHeight(params.getSecondTitleHeight());
@@ -222,9 +234,14 @@ public class ExcelExportService {
      * @param cellIndex      单元格索引
      * @return 行数
      */
-    private int createHeader(Sheet sheet, int index, ExportParams params, List<ExcelExportEntity> exportEntities, int cellIndex) {
+    private int createHeader(
+            Sheet sheet,
+            int index,
+            ExportParams params,
+            List<ExcelExportEntity> exportEntities,
+            int cellIndex) {
         Row row = sheet.getRow(index) == null ? sheet.createRow(index) : sheet.getRow(index);
-        //判断是否存在多级表头
+        // 判断是否存在多级表头
         int rows = PoiPublicUtil.getRowNums(exportEntities, true);
         row.setHeight(params.getHeaderHeight());
         Row listRow = null;
@@ -234,19 +251,31 @@ public class ExcelExportService {
         }
         int groupCellLength = 0;
         CellStyle headerStyle = params.getStyle().getHeaderStyle(params.getHeaderColor());
-        for (int i = 0, exportFieldTitleSize = exportEntities.size(); i < exportFieldTitleSize; i++) {
+        for (int i = 0, exportFieldTitleSize = exportEntities.size();
+                i < exportFieldTitleSize;
+                i++) {
             ExcelExportEntity entity = exportEntities.get(i);
             if (StringUtils.isNotBlank(entity.getGroupName())) {
-                createCell(params.getType(), row, cellIndex, entity.getGroupName(), headerStyle, null);
-                createCell(params.getType(), listRow == null ? listRow = sheet.createRow(index + 1) : listRow, cellIndex, entity.getName(), headerStyle, null);
+                createCell(
+                        params.getType(), row, cellIndex, entity.getGroupName(), headerStyle, null);
+                createCell(
+                        params.getType(),
+                        listRow == null ? listRow = sheet.createRow(index + 1) : listRow,
+                        cellIndex,
+                        entity.getName(),
+                        headerStyle,
+                        null);
                 if (entity.getGroupName().equals(exportEntities.get(i - 1).getGroupName())) {
                     groupCellLength++;
                     if (groupCellLength > 1) {
-                        int mergedRegion = getMergedRegion(sheet, index, cellIndex - groupCellLength + 1);
+                        int mergedRegion =
+                                getMergedRegion(sheet, index, cellIndex - groupCellLength + 1);
                         if (mergedRegion != -1) {
                             sheet.removeMergedRegion(mergedRegion);
                         }
-                        sheet.addMergedRegion(new CellRangeAddress(index, index, cellIndex - groupCellLength + 1, cellIndex));
+                        sheet.addMergedRegion(
+                                new CellRangeAddress(
+                                        index, index, cellIndex - groupCellLength + 1, cellIndex));
                     }
                 } else {
                     groupCellLength = 1;
@@ -256,8 +285,10 @@ public class ExcelExportService {
                 createCell(params.getType(), row, cellIndex, entity.getName(), headerStyle, null);
             }
             if (entity.getList() != null && entity.getList().size() > 0) {
-                createHeader(sheet, rows == 1 ? index : index + 1, params, entity.getList(), cellIndex);
-                PoiPublicUtil.addMergedRegion(sheet, index, index, cellIndex, cellIndex + entity.getList().size() - 1);
+                createHeader(
+                        sheet, rows == 1 ? index : index + 1, params, entity.getList(), cellIndex);
+                PoiPublicUtil.addMergedRegion(
+                        sheet, index, index, cellIndex, cellIndex + entity.getList().size() - 1);
                 cellIndex = cellIndex + entity.getList().size() - 1;
             } else if (rows > 1 && groupCellLength == 0) {
                 createCell(params.getType(), listRow, cellIndex, "", headerStyle, null);
@@ -311,14 +342,24 @@ public class ExcelExportService {
      * @param cellNum        列索引
      * @return 序号
      */
-    private int[] createData(Sheet sheet, int rowIndex, Object t, ExportParams params, List<ExcelExportEntity> exportEntities, AtomicInteger currentIndex, int cellNum) {
+    private int[] createData(
+            Sheet sheet,
+            int rowIndex,
+            Object t,
+            ExportParams params,
+            List<ExcelExportEntity> exportEntities,
+            AtomicInteger currentIndex,
+            int cellNum) {
         try {
-            Row row = sheet.getRow(rowIndex) == null ? sheet.createRow(rowIndex) : sheet.getRow(rowIndex);
+            Row row =
+                    sheet.getRow(rowIndex) == null
+                            ? sheet.createRow(rowIndex)
+                            : sheet.getRow(rowIndex);
             row.setHeight(params.getHeight());
             // 需要合并单元格的起始列数
             int margeCellNum = cellNum;
             int maxHeight = 1;
-            //创建序号单元格
+            // 创建序号单元格
             int indexKey = createIndex(row, params, exportEntities.get(0), currentIndex);
             cellNum += indexKey;
             ExcelExportEntity entity;
@@ -334,9 +375,25 @@ public class ExcelExportService {
                                 ExcelExportEntity entiyItem = new ExcelExportEntity();
                                 entiyItem.setName("");
                                 entiyItem.setType(entity.getType());
-                                temp = createData(sheet, rowIndex + maxHeight - 1, obj, params, List.of(entiyItem), currentIndex, cellNum);
+                                temp =
+                                        createData(
+                                                sheet,
+                                                rowIndex + maxHeight - 1,
+                                                obj,
+                                                params,
+                                                List.of(entiyItem),
+                                                currentIndex,
+                                                cellNum);
                             } else {
-                                temp = createData(sheet, rowIndex + maxHeight - 1, obj, params, entity.getList(), currentIndex, cellNum);
+                                temp =
+                                        createData(
+                                                sheet,
+                                                rowIndex + maxHeight - 1,
+                                                obj,
+                                                params,
+                                                entity.getList(),
+                                                currentIndex,
+                                                cellNum);
                             }
                             tempCellNum = temp[1];
                             maxHeight += temp[0];
@@ -349,16 +406,26 @@ public class ExcelExportService {
                     Object val = getCellValue(params, entity, t);
                     createCell(params.getType(), row, cellNum++, val, cellStyle, entity);
                     if (entity.getWidth() == 0) {
-                        PoiPublicUtil.setColumnWidthAdaptive(sheet, cellNum - 1, String.valueOf(val));
+                        PoiPublicUtil.setColumnWidthAdaptive(
+                                sheet, cellNum - 1, String.valueOf(val));
                     }
                     if (entity.isHyperlink() && params.getDataHandler() != null) {
-                        row.getCell(cellNum - 1).setHyperlink(params.getDataHandler().getHyperlink(row.getSheet().getWorkbook().getCreationHelper(), t, entity.getName(), val));
+                        row.getCell(cellNum - 1)
+                                .setHyperlink(
+                                        params.getDataHandler()
+                                                .getHyperlink(
+                                                        row.getSheet()
+                                                                .getWorkbook()
+                                                                .getCreationHelper(),
+                                                        t,
+                                                        entity.getName(),
+                                                        val));
                     }
-                    //添加合计数据
+                    // 添加合计数据
                     addStatisticsData(cellNum - 1, val, entity);
                 }
             }
-            //合并list、group单元格
+            // 合并list、group单元格
             for (ExcelExportEntity exportEntity : exportEntities) {
                 entity = exportEntity;
                 if (entity.getList() != null) {
@@ -366,13 +433,16 @@ public class ExcelExportService {
                 } else if (maxHeight > 1) {
                     for (int i = rowIndex + 1; i < rowIndex + maxHeight; i++) {
                         sheet.getRow(i).createCell(margeCellNum);
-                        sheet.getRow(i).getCell(margeCellNum).setCellStyle(params.getStyle().getDataStyle(entity));
+                        sheet.getRow(i)
+                                .getCell(margeCellNum)
+                                .setCellStyle(params.getStyle().getDataStyle(entity));
                     }
-                    PoiPublicUtil.addMergedRegion(sheet, rowIndex, rowIndex + maxHeight - 1, margeCellNum, margeCellNum);
+                    PoiPublicUtil.addMergedRegion(
+                            sheet, rowIndex, rowIndex + maxHeight - 1, margeCellNum, margeCellNum);
                     margeCellNum++;
                 }
             }
-            return new int[]{maxHeight, cellNum};
+            return new int[] {maxHeight, cellNum};
         } catch (Exception e) {
             throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e);
         }
@@ -405,7 +475,8 @@ public class ExcelExportService {
      * @return 单元格值
      * @throws Exception 异常
      */
-    private Object getCellValue(ExportParams params, ExcelExportEntity entity, Object obj) throws Exception {
+    private Object getCellValue(ExportParams params, ExcelExportEntity entity, Object obj)
+            throws Exception {
         Object value;
         if (obj instanceof Map) {
             value = ((Map<?, ?>) obj).get(entity.getKey());
@@ -421,7 +492,9 @@ public class ExcelExportService {
             value = PoiPublicUtil.replaceValue(entity.getReplace(), String.valueOf(value), 1);
         }
         if (StringUtils.isNotEmpty(entity.getDict()) && params.getDictHandler() != null) {
-            value = params.getDictHandler().exportHandler(entity.getDict(), entity.getName(), value);
+            value =
+                    params.getDictHandler()
+                            .exportHandler(entity.getDict(), entity.getName(), value);
         }
         if (params.getDataHandler() != null) {
             value = params.getDataHandler().exportHandler(entity.getName(), value);
@@ -430,7 +503,9 @@ public class ExcelExportService {
             value = value + entity.getSuffix();
         }
         if (value != null && StringUtils.isNotEmpty(entity.getEnumExportField())) {
-            value = PoiReflectorUtil.fromCache(value.getClass()).getValue(value, entity.getEnumExportField());
+            value =
+                    PoiReflectorUtil.fromCache(value.getClass())
+                            .getValue(value, entity.getEnumExportField());
         }
         return value;
     }
@@ -462,9 +537,21 @@ public class ExcelExportService {
      * @param currentIndex 当前序号
      * @return 起始列索引
      */
-    private int createIndex(Row row, ExportParams params, ExcelExportEntity exportEntity, AtomicInteger currentIndex) {
-        if (params.isAddIndex() && params.getIndexName() != null && params.getIndexName().equals(exportEntity.getName())) {
-            createCell(params.getType(), row, 0, currentIndex.incrementAndGet() + "", params.getStyle().getDataStyle(null), null);
+    private int createIndex(
+            Row row,
+            ExportParams params,
+            ExcelExportEntity exportEntity,
+            AtomicInteger currentIndex) {
+        if (params.isAddIndex()
+                && params.getIndexName() != null
+                && params.getIndexName().equals(exportEntity.getName())) {
+            createCell(
+                    params.getType(),
+                    row,
+                    0,
+                    currentIndex.incrementAndGet() + "",
+                    params.getStyle().getDataStyle(null),
+                    null);
             return 1;
         }
         return 0;
@@ -480,7 +567,13 @@ public class ExcelExportService {
      * @param cellStyle 单元格样式
      * @param entity    导出实体
      */
-    private void createCell(ExcelType type, Row row, int index, Object val, CellStyle cellStyle, ExcelExportEntity entity) {
+    private void createCell(
+            ExcelType type,
+            Row row,
+            int index,
+            Object val,
+            CellStyle cellStyle,
+            ExcelExportEntity entity) {
         Cell cell = row.createCell(index);
         try {
             if (entity == null) {
@@ -574,7 +667,7 @@ public class ExcelExportService {
         if (mergeMap.size() == 0) {
             return;
         }
-        //结束行
+        // 结束行
         int endRow = sheet.getLastRowNum();
         Map<Integer, MergeEntity> mergeDataMap = new HashMap<>(4);
         Row row;
@@ -591,14 +684,26 @@ public class ExcelExportService {
                     }
                 } else {
                     text = PoiPublicUtil.getCellStringValue(row.getCell(index));
-                    handlerMergeCells(index, i, text, mergeDataMap, sheet, row.getCell(index), mergeMap.get(index));
+                    handlerMergeCells(
+                            index,
+                            i,
+                            text,
+                            mergeDataMap,
+                            sheet,
+                            row.getCell(index),
+                            mergeMap.get(index));
                 }
             }
         }
         if (mergeDataMap.size() > 0) {
             for (Integer index : mergeDataMap.keySet()) {
                 if (mergeDataMap.get(index).getEndRow() > mergeDataMap.get(index).getStartRow()) {
-                    PoiPublicUtil.addMergedRegion(sheet, mergeDataMap.get(index).getStartRow(), mergeDataMap.get(index).getEndRow(), index, index);
+                    PoiPublicUtil.addMergedRegion(
+                            sheet,
+                            mergeDataMap.get(index).getStartRow(),
+                            mergeDataMap.get(index).getEndRow(),
+                            index,
+                            index);
                 }
             }
         }
@@ -615,7 +720,14 @@ public class ExcelExportService {
      * @param cell         单元格
      * @param delys        待合并单元格
      */
-    private void handlerMergeCells(int colIndex, int rowNum, String text, Map<Integer, MergeEntity> mergeDataMap, Sheet sheet, Cell cell, int[] delys) {
+    private void handlerMergeCells(
+            int colIndex,
+            int rowNum,
+            String text,
+            Map<Integer, MergeEntity> mergeDataMap,
+            Sheet sheet,
+            Cell cell,
+            int[] delys) {
         if (text != null) {
             if (!mergeDataMap.containsKey(colIndex)) {
                 mergeDataMap.put(colIndex, createMergeEntity(text, rowNum, cell, delys));
@@ -629,8 +741,15 @@ public class ExcelExportService {
                 }
                 mergeDataMap.get(colIndex).setEndRow(endRow);
             } else {
-                if (mergeDataMap.get(colIndex).getEndRow() < rowNum && mergeDataMap.get(colIndex).getEndRow() > mergeDataMap.get(colIndex).getStartRow()) {
-                    PoiPublicUtil.addMergedRegion(sheet, mergeDataMap.get(colIndex).getStartRow(), mergeDataMap.get(colIndex).getEndRow(), colIndex, colIndex);
+                if (mergeDataMap.get(colIndex).getEndRow() < rowNum
+                        && mergeDataMap.get(colIndex).getEndRow()
+                                > mergeDataMap.get(colIndex).getStartRow()) {
+                    PoiPublicUtil.addMergedRegion(
+                            sheet,
+                            mergeDataMap.get(colIndex).getStartRow(),
+                            mergeDataMap.get(colIndex).getEndRow(),
+                            colIndex,
+                            colIndex);
                 }
                 mergeDataMap.remove(colIndex);
                 handlerMergeCells(colIndex, rowNum, text, mergeDataMap, sheet, cell, delys);
@@ -648,8 +767,10 @@ public class ExcelExportService {
      */
     private int getMergedRegion(Sheet sheet, int row, int column) {
         for (int i = 0; i < sheet.getMergedRegions().size(); i++) {
-            if (row >= sheet.getMergedRegions().get(i).getFirstRow() && row <= sheet.getMergedRegions().get(i).getLastRow()) {
-                if (column >= sheet.getMergedRegions().get(i).getFirstColumn() && column <= sheet.getMergedRegions().get(i).getLastColumn()) {
+            if (row >= sheet.getMergedRegions().get(i).getFirstRow()
+                    && row <= sheet.getMergedRegions().get(i).getLastRow()) {
+                if (column >= sheet.getMergedRegions().get(i).getFirstColumn()
+                        && column <= sheet.getMergedRegions().get(i).getLastColumn()) {
                     return i;
                 }
             }
@@ -667,7 +788,8 @@ public class ExcelExportService {
      * @param rowNum      行号
      * @return true or false
      */
-    private boolean checkIsEqualByCellContents(MergeEntity mergeEntity, String text, Cell cell, int[] delys, int rowNum) {
+    private boolean checkIsEqualByCellContents(
+            MergeEntity mergeEntity, String text, Cell cell, int[] delys, int rowNum) {
         // 没有依赖关系
         if (delys == null || delys.length == 0) {
             return mergeEntity.getText().equals(text);
@@ -675,7 +797,11 @@ public class ExcelExportService {
         // 存在依赖关系
         if (mergeEntity.getText().equals(text)) {
             for (int i = 0; i < delys.length; i++) {
-                if (mergeEntity.getRelyList().get(i) == null || !mergeEntity.getRelyList().get(i).equals(getCellNotNullText(cell, delys[i], rowNum))) {
+                if (mergeEntity.getRelyList().get(i) == null
+                        || !mergeEntity
+                                .getRelyList()
+                                .get(i)
+                                .equals(getCellNotNullText(cell, delys[i], rowNum))) {
                     return false;
                 }
             }
@@ -725,7 +851,8 @@ public class ExcelExportService {
                 return res;
             }
         }
-        return getCellNotNullText(cell.getRow().getSheet().getRow(--rowNum).getCell(index), index, rowNum);
+        return getCellNotNullText(
+                cell.getRow().getSheet().getRow(--rowNum).getCell(index), index, rowNum);
     }
 
     /**
@@ -742,7 +869,8 @@ public class ExcelExportService {
             for (Map.Entry<Integer, Double> entry : statistics.entrySet()) {
                 ExcelExportEntity entity = new ExcelExportEntity();
                 entity.setType(CellType.NUMERIC);
-                createCell(params.getType(), row, entry.getKey(), entry.getValue(), cellStyle, entity);
+                createCell(
+                        params.getType(), row, entry.getKey(), entry.getValue(), cellStyle, entity);
             }
             statistics.clear();
         }
@@ -755,7 +883,8 @@ public class ExcelExportService {
      * @param val      值
      * @param entity   导出实体
      */
-    private synchronized void addStatisticsData(int colIndex, Object val, ExcelExportEntity entity) {
+    private synchronized void addStatisticsData(
+            int colIndex, Object val, ExcelExportEntity entity) {
         if (entity != null && entity.isStatistics() && StringUtils.isNumeric(String.valueOf(val))) {
             Double temp = 0D;
             if (!statistics.containsKey(colIndex)) {
@@ -764,7 +893,8 @@ public class ExcelExportService {
             try {
                 temp = Double.valueOf(String.valueOf(val));
             } catch (NumberFormatException e) {
-                log.warn("excel exprot add statistics data value = {}, transfer type error", val, e);
+                log.warn(
+                        "excel exprot add statistics data value = {}, transfer type error", val, e);
                 return;
             }
             statistics.put(colIndex, statistics.get(colIndex) + temp);

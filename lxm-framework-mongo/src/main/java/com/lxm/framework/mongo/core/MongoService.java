@@ -54,7 +54,8 @@ public class MongoService {
      * @param <T>        实体
      * @return pagination
      */
-    public <T> StandardPage<T> getPage(StandardPage<T> pagination, MongoQuery mongoQuery, Class<T> clz) {
+    public <T> StandardPage<T> getPage(
+            StandardPage<T> pagination, MongoQuery mongoQuery, Class<T> clz) {
         return getPage(pagination, mongoQuery, clz, MongoHelper.getColName(clz));
     }
 
@@ -68,12 +69,14 @@ public class MongoService {
      * @param <T>        实体
      * @return pagination
      */
-    public <T> StandardPage<T> getPage(StandardPage<T> pagination, MongoQuery mongoQuery, Class<T> clz, String col) {
+    public <T> StandardPage<T> getPage(
+            StandardPage<T> pagination, MongoQuery mongoQuery, Class<T> clz, String col) {
         if (pagination == null || mongoQuery == null) {
             throw new AppException(500, "mongo service get page error, param cannot be null");
         }
         if (pagination.getCurrent() < 1 || pagination.getSize() < 1 || pagination.getSize() > 1000)
-            throw new IllegalArgumentException("Mongo page current must be positive and size must be 1..1000");
+            throw new IllegalArgumentException(
+                    "Mongo page current must be positive and size must be 1..1000");
         Query query = Query.of(mongoQuery.getQuery());
         long count = MongoHelper.getCount(Query.of(query).skip(0).limit(0), col);
         pagination.putTotal(count);
@@ -197,7 +200,8 @@ public class MongoService {
      * @param multi      是否更新所有
      * @return UpdateResult
      */
-    public UpdateResult edit(MongoQuery mongoQuery, Update update, Class<?> clz, String col, boolean multi) {
+    public UpdateResult edit(
+            MongoQuery mongoQuery, Update update, Class<?> clz, String col, boolean multi) {
         if (mongoQuery == null) {
             throw new AppException(500, "mongo service edit error, param cannot be null");
         }

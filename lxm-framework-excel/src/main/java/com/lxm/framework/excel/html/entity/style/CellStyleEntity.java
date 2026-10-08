@@ -22,31 +22,37 @@ public class CellStyleEntity {
     /**
      * 宽
      */
-    private String                width;
+    private String width;
+
     /**
      * 高
      */
-    private String                height;
+    private String height;
+
     /**
      * 边框
      */
     private CellStyleBorderEntity border;
+
     /**
      * 背景
      */
-    private String                background;
+    private String background;
+
     /**
      * 水平位置
      */
-    private String                align;
+    private String align;
+
     /**
      * 垂直位置
      */
-    private String                vetical;
+    private String vetical;
+
     /**
      * 字体设置
      */
-    private CssStyleFontEnity     font;
+    private CssStyleFontEnity font;
 
     public String getWidth() {
         return width;
@@ -106,8 +112,14 @@ public class CellStyleEntity {
 
     @Override
     public String toString() {
-        return new StringBuilder().append(align).append(background).append(border).append(height)
-            .append(vetical).append(width).append(font).toString();
+        return new StringBuilder()
+                .append(align)
+                .append(background)
+                .append(border)
+                .append(height)
+                .append(vetical)
+                .append(width)
+                .append(font)
+                .toString();
     }
-
 }

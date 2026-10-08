@@ -11,7 +11,6 @@ import lombok.EqualsAndHashCode;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
@@ -25,7 +24,6 @@ import java.time.LocalDateTime;
 @Data
 public class SimpleEntity<T extends Model<?>> extends Model<T> {
 
-
     private static final long serialVersionUID = 1879206951651314542L;
 
     @TableField(value = "created_at", fill = FieldFill.INSERT)
@@ -38,7 +36,9 @@ public class SimpleEntity<T extends Model<?>> extends Model<T> {
     @TableField(value = "deleted", fill = FieldFill.INSERT_UPDATE)
     private Boolean deleted;
 
-    @TableField(value = "deleted_time", insertStrategy = FieldStrategy.NOT_NULL, updateStrategy = FieldStrategy.NOT_NULL)
+    @TableField(
+            value = "deleted_time",
+            insertStrategy = FieldStrategy.NOT_NULL,
+            updateStrategy = FieldStrategy.NOT_NULL)
     private LocalDateTime deletedTime;
-
 }

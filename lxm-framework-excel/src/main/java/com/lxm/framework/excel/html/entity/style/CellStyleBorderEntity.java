@@ -142,12 +142,19 @@ public class CellStyleBorderEntity {
 
     @Override
     public String toString() {
-        return new StringBuilder().append(borderLeftColor).append(borderRightColor)
-            .append(borderTopColor).append(borderBottomColor).append(borderLeftStyle)
-            .append(borderRightStyle).append(borderTopStyle).append(borderBottomStyle)
-            .append(borderLeftWidth).append(borderRightWidth).append(borderTopWidth)
-            .append(borderBottomWidth).toString();
-
+        return new StringBuilder()
+                .append(borderLeftColor)
+                .append(borderRightColor)
+                .append(borderTopColor)
+                .append(borderBottomColor)
+                .append(borderLeftStyle)
+                .append(borderRightStyle)
+                .append(borderTopStyle)
+                .append(borderBottomStyle)
+                .append(borderLeftWidth)
+                .append(borderRightWidth)
+                .append(borderTopWidth)
+                .append(borderBottomWidth)
+                .toString();
     }
-
 }

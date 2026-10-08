@@ -16,5 +16,4 @@ public class UsualConstant {
     public final static String DEFAULT_DATETIME_FORMAT_SHORT = "yyMMddHHmmss";
 
     public static final String DEFAULT_MYSQL_DB_NAME = "lxm";
-
 }

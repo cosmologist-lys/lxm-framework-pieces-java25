@@ -23,25 +23,19 @@ public class LxmSession implements Serializable {
     /**
      * 此Session的id
      */
-    @Getter
-    @Setter
-    private String loginId;
+    @Getter @Setter private String loginId;
 
     /**
      * 此Session的创建时间
      */
-    @Getter
-    @Setter
-    private long createTimestamp;
+    @Getter @Setter private long createTimestamp;
 
     /**
      * 此Session的所有挂载数据
      */
-    @Setter
-    private Map<String, Object> dataMap = new ConcurrentHashMap<>();
+    @Setter private Map<String, Object> dataMap = new ConcurrentHashMap<>();
 
-    @Setter
-    private List<TokenBox> tokenList = new Vector<>();
+    @Setter private List<TokenBox> tokenList = new Vector<>();
 
     public LxmSession() {
         this(null);
@@ -183,7 +177,7 @@ public class LxmSession implements Serializable {
      * 更新Session（从持久库更新刷新一下）
      */
     public void update() {
-        //AuthManager.getSaTokenDao().updateSession(this);
+        // AuthManager.getSaTokenDao().updateSession(this);
     }
 
     public boolean isEmpty() {

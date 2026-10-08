@@ -9,7 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @Date 2023/6/5
  * @Describe
  **/
-@Getter @Setter
+@Getter
+@Setter
 @ConfigurationProperties(prefix = "lxm-auth.redis")
 public class AuthRedisProperties {
 
@@ -18,7 +19,7 @@ public class AuthRedisProperties {
     private Integer database = 2;
     private String password;
 
-    public boolean prepared(){
+    public boolean prepared() {
         return port != null && port > 0;
     }
 }

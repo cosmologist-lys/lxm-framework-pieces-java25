@@ -1,4 +1,3 @@
-
 package com.lxm.framework.web.http;
 
 import cn.hutool.http.HttpRequest;
@@ -38,36 +37,80 @@ public class HttpClient {
         objectMapper = com.lxm.framework.web.jackon.FrameworkJackson.mapper();
     }
 
-    public static <T> T get(@NonNull String url, Map<String, Object> requestParams, @NonNull Class<T> returnClass) {
-        return execute(url, HttpMethod.GET, requestParams, null, null, null, null, returnClass, null);
+    public static <T> T get(
+            @NonNull String url, Map<String, Object> requestParams, @NonNull Class<T> returnClass) {
+        return execute(
+                url, HttpMethod.GET, requestParams, null, null, null, null, returnClass, null);
     }
 
-    public static <T> T get(@NonNull String url, Map<String, Object> requestParams, @NonNull TypeReference<T> typeReference) {
-        return execute(url, HttpMethod.GET, requestParams, null, null, null, null, null, typeReference);
+    public static <T> T get(
+            @NonNull String url,
+            Map<String, Object> requestParams,
+            @NonNull TypeReference<T> typeReference) {
+        return execute(
+                url, HttpMethod.GET, requestParams, null, null, null, null, null, typeReference);
     }
 
-    public static <T> T post(@NonNull String url, @NonNull Object requestBody, Map<String, Object> requestParams, @NonNull Class<T> returnClass) {
-        return execute(url, HttpMethod.POST, requestParams, requestBody, null, null, null, returnClass, null);
+    public static <T> T post(
+            @NonNull String url,
+            @NonNull Object requestBody,
+            Map<String, Object> requestParams,
+            @NonNull Class<T> returnClass) {
+        return execute(
+                url,
+                HttpMethod.POST,
+                requestParams,
+                requestBody,
+                null,
+                null,
+                null,
+                returnClass,
+                null);
     }
 
-    public static <T> T post(@NonNull String url, @NonNull Object requestBody, Map<String, Object> requestParams, @NonNull TypeReference<T> typeReference) {
-        return execute(url, HttpMethod.POST, requestParams, requestBody, null, null, null, null, typeReference);
+    public static <T> T post(
+            @NonNull String url,
+            @NonNull Object requestBody,
+            Map<String, Object> requestParams,
+            @NonNull TypeReference<T> typeReference) {
+        return execute(
+                url,
+                HttpMethod.POST,
+                requestParams,
+                requestBody,
+                null,
+                null,
+                null,
+                null,
+                typeReference);
     }
 
-    public static <T> T put(@NonNull String url, Map<String, Object> requestParams, @NonNull Class<T> returnClass) {
-        return execute(url, HttpMethod.PUT, requestParams, null, null, null, null, returnClass, null);
+    public static <T> T put(
+            @NonNull String url, Map<String, Object> requestParams, @NonNull Class<T> returnClass) {
+        return execute(
+                url, HttpMethod.PUT, requestParams, null, null, null, null, returnClass, null);
     }
 
-    public static <T> T put(@NonNull String url, Map<String, Object> requestParams, @NonNull TypeReference<T> typeReference) {
-        return execute(url, HttpMethod.PUT, requestParams, null, null, null, null, null, typeReference);
+    public static <T> T put(
+            @NonNull String url,
+            Map<String, Object> requestParams,
+            @NonNull TypeReference<T> typeReference) {
+        return execute(
+                url, HttpMethod.PUT, requestParams, null, null, null, null, null, typeReference);
     }
 
-    public static <T> T delete(@NonNull String url, Map<String, Object> requestParams, @NonNull Class<T> returnClass) {
-        return execute(url, HttpMethod.DELETE, requestParams, null, null, null, null, returnClass, null);
+    public static <T> T delete(
+            @NonNull String url, Map<String, Object> requestParams, @NonNull Class<T> returnClass) {
+        return execute(
+                url, HttpMethod.DELETE, requestParams, null, null, null, null, returnClass, null);
     }
 
-    public static <T> T delete(@NonNull String url, Map<String, Object> requestParams, @NonNull TypeReference<T> typeReference) {
-        return execute(url, HttpMethod.DELETE, requestParams, null, null, null, null, null, typeReference);
+    public static <T> T delete(
+            @NonNull String url,
+            Map<String, Object> requestParams,
+            @NonNull TypeReference<T> typeReference) {
+        return execute(
+                url, HttpMethod.DELETE, requestParams, null, null, null, null, null, typeReference);
     }
 
     public static void useCache(boolean use) {
@@ -85,25 +128,38 @@ public class HttpClient {
      * @param <T>           generic
      * @return target generic
      */
-    public static <T> T execute(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, Object> requestParams, Object requestBody, MediaType mediaType, Map<String, String> headers, Map<String, String> cookies, Class<T> returnClass, TypeReference<T> typeReference) {
+    public static <T> T execute(
+            @NonNull String url,
+            @NonNull HttpMethod httpMethod,
+            Map<String, Object> requestParams,
+            Object requestBody,
+            MediaType mediaType,
+            Map<String, String> headers,
+            Map<String, String> cookies,
+            Class<T> returnClass,
+            TypeReference<T> typeReference) {
         String finalUrl = link(url, requestParams);
-        var req = HttpRequest.of(finalUrl)
-                .method(toMethod(httpMethod))
-                .timeout(TIMEOUT_MILLIS);
+        var req = HttpRequest.of(finalUrl).method(toMethod(httpMethod)).timeout(TIMEOUT_MILLIS);
         setHeaders(req, headers);
         setCookies(req, cookies);
         setBody(req, requestBody);
         setContentType(req, mediaType);
         if (cookies == null || cookies.isEmpty()) req.disableCookie();
         String cacheKey = null;
-        if (useCache.get() && httpMethod == HttpMethod.GET && requestBody == null &&
-            (headers == null || headers.isEmpty()) && (cookies == null || cookies.isEmpty())) {
+        if (useCache.get()
+                && httpMethod == HttpMethod.GET
+                && requestBody == null
+                && (headers == null || headers.isEmpty())
+                && (cookies == null || cookies.isEmpty())) {
             cacheKey = "lfp:http:" + finalUrl;
             String cached = CaffeineCache.read(cacheKey, String.class);
             if (cached != null) return mapping(cached, returnClass, typeReference, null);
         }
         try (var response = req.execute()) {
-            if (!response.isOk()) throw new AppException(response.getStatus(), "HTTP request failed with status " + response.getStatus());
+            if (!response.isOk())
+                throw new AppException(
+                        response.getStatus(),
+                        "HTTP request failed with status " + response.getStatus());
             String body = response.body();
             T result = mapping(body, returnClass, typeReference, null);
             if (cacheKey != null) CaffeineCache.write(cacheKey, body);
@@ -121,12 +177,15 @@ public class HttpClient {
      * @param <T>               类型
      * @return T
      */
-    private static <T> T mapping(String requestBodyString, Class<T> returnClass, TypeReference<T> typeReference, String md5) {
+    private static <T> T mapping(
+            String requestBodyString,
+            Class<T> returnClass,
+            TypeReference<T> typeReference,
+            String md5) {
         try {
             T result;
             if (null != typeReference) {
-                final TypeReference<String> StringTypeReference = new TypeReference<>() {
-                };
+                final TypeReference<String> StringTypeReference = new TypeReference<>() {};
                 // 如果要返回的类型是string，就不用转换了，下面同理
                 if (StringTypeReference.getType().equals(typeReference.getType())) {
                     return (T) requestBodyString;
@@ -178,7 +237,8 @@ public class HttpClient {
      */
     private static void setBody(@NonNull HttpRequest request, Object body) {
         if (body != null) {
-            if (request.getMethod() == Method.GET || request.getMethod() == Method.HEAD) throw new IllegalArgumentException("Body is not supported for this method");
+            if (request.getMethod() == Method.GET || request.getMethod() == Method.HEAD)
+                throw new IllegalArgumentException("Body is not supported for this method");
             request.body(objectMapper.writeValueAsString(body));
         }
     }
@@ -227,14 +287,22 @@ public class HttpClient {
         String suffix = fragment < 0 ? "" : url.substring(fragment);
         String base = fragment < 0 ? url : url.substring(0, fragment);
         var result = new StringBuilder(base);
-        params.forEach((key,value) -> {
-            if (key != null && value != null) {
-                if (result.indexOf("?") < 0) result.append('?');
-                else if (result.charAt(result.length()-1) != '?' && result.charAt(result.length()-1) != '&') result.append('&');
-                result.append(java.net.URLEncoder.encode(key, java.nio.charset.StandardCharsets.UTF_8));
-                result.append('=').append(java.net.URLEncoder.encode(String.valueOf(value), java.nio.charset.StandardCharsets.UTF_8));
-            }
-        });
+        params.forEach(
+                (key, value) -> {
+                    if (key != null && value != null) {
+                        if (result.indexOf("?") < 0) result.append('?');
+                        else if (result.charAt(result.length() - 1) != '?'
+                                && result.charAt(result.length() - 1) != '&') result.append('&');
+                        result.append(
+                                java.net.URLEncoder.encode(
+                                        key, java.nio.charset.StandardCharsets.UTF_8));
+                        result.append('=')
+                                .append(
+                                        java.net.URLEncoder.encode(
+                                                String.valueOf(value),
+                                                java.nio.charset.StandardCharsets.UTF_8));
+                    }
+                });
         return result.append(suffix).toString();
     }
 }

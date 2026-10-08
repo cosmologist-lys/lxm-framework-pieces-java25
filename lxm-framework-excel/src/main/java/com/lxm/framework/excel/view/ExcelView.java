@@ -34,25 +34,40 @@ public class ExcelView extends AbstractView {
      * 工作薄对象
      */
     private final Workbook wb;
+
     /**
      * 表格标题
      */
     private final String filename;
+
     /**
      * 导出文件扩展名
      */
     private String extension = "xlsx";
 
-
     @Override
-    protected void renderMergedOutputModel(Map<String,Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        response.setContentType("xls".equals(extension) ? "application/vnd.ms-excel" : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        String encoded=URLEncoder.encode(filename+"."+extension,StandardCharsets.UTF_8).replace("+","%20");
-        response.setHeader("Content-Disposition","attachment; filename*=UTF-8''"+encoded);
-        try (Workbook workbook=wb) { buildExcelDocument(model,workbook,request,response); }
+    protected void renderMergedOutputModel(
+            Map<String, Object> model, HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        response.setContentType(
+                "xls".equals(extension)
+                        ? "application/vnd.ms-excel"
+                        : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        String encoded =
+                URLEncoder.encode(filename + "." + extension, StandardCharsets.UTF_8)
+                        .replace("+", "%20");
+        response.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encoded);
+        try (Workbook workbook = wb) {
+            buildExcelDocument(model, workbook, request, response);
+        }
     }
 
-    protected void buildExcelDocument(Map<String,Object> model, Workbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected void buildExcelDocument(
+            Map<String, Object> model,
+            Workbook workbook,
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws Exception {
         workbook.write(response.getOutputStream());
     }
 
@@ -67,7 +82,7 @@ public class ExcelView extends AbstractView {
         }
         this.filename = workbook.getSheetName(0);
         this.wb = workbook;
-        if(workbook instanceof HSSFWorkbook){
+        if (workbook instanceof HSSFWorkbook) {
             this.extension = "xls";
         }
     }
@@ -88,7 +103,7 @@ public class ExcelView extends AbstractView {
         }
         this.filename = title;
         this.wb = workbook;
-        if(workbook instanceof HSSFWorkbook){
+        if (workbook instanceof HSSFWorkbook) {
             this.extension = "xls";
         }
     }
@@ -117,7 +132,6 @@ public class ExcelView extends AbstractView {
         params.setTitle(title);
         this.wb = ExcelUtils.export(params, pojoClass, dataList);
     }
-
 
     /**
      * 导出含有多个sheet的excel
@@ -194,7 +208,8 @@ public class ExcelView extends AbstractView {
      * @param dataList       导出的列表数据
      * @return ExcelView
      */
-    public ExcelView(ExportParams params, List<ExcelExportEntity> exportEntities, List<?> dataList) {
+    public ExcelView(
+            ExportParams params, List<ExcelExportEntity> exportEntities, List<?> dataList) {
         if (Objects.isNull(params)) {
             log.warn("excel export params cannot be null");
             throw new AppException(55601, "excel export params cannot be null");
@@ -222,5 +237,4 @@ public class ExcelView extends AbstractView {
     public Workbook getWorkbook() {
         return this.wb;
     }
-
 }

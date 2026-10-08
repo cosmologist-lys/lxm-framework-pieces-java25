@@ -13,8 +13,7 @@ public class MarkdownUtils {
     private static final String NEW_LINE = " \n";
     private static final String QUOTE = "```";
 
-    private MarkdownUtils() {
-    }
+    private MarkdownUtils() {}
 
     public static Md init() {
         return new Md();
@@ -127,7 +126,12 @@ public class MarkdownUtils {
          */
         public Md quote(String text, QuoteStyle quoteStyle) {
             if (Objects.nonNull(quoteStyle)) {
-                content.append(QUOTE).append(quoteStyle.name).append(NEW_LINE).append(text).append(QUOTE).append(NEW_LINE);
+                content.append(QUOTE)
+                        .append(quoteStyle.name)
+                        .append(NEW_LINE)
+                        .append(text)
+                        .append(QUOTE)
+                        .append(NEW_LINE);
             } else {
                 content.append(QUOTE).append(NEW_LINE).append(text).append(QUOTE).append(NEW_LINE);
             }

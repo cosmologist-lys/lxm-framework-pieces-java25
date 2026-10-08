@@ -1,6 +1,5 @@
 package com.lxm.framework.common.cache.customized.inf;
 
-
 import com.lxm.framework.common.cache.customized.impl.ImmutableKey;
 import com.lxm.framework.common.cache.customized.parts.CacheTarget;
 import com.lxm.framework.common.utils.DateTimeUtils;
@@ -24,6 +23,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
     protected CacheListener<K, V> listener;
 
     protected Map<Immutable<K>, CacheTarget<K, V>> cacheMap;
+
     /**
      * 访问次数，get，set方法每调用一次，+1
      */
@@ -50,7 +50,8 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
     protected boolean safe(CacheTarget<K, V> target) {
         if (target == null) return false;
         if (target.isExpired()) {
-            if (cacheMap.remove(ImmutableKey.of(target.getKey()), target)) onRemove(target.getKey(), target.getValue());
+            if (cacheMap.remove(ImmutableKey.of(target.getKey()), target))
+                onRemove(target.getKey(), target.getValue());
             return false;
         }
         return true;
@@ -59,8 +60,10 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
     @Override
     public synchronized void put(K key, V value, long timeout, TimeUnit timeUnit) {
         visitCount.increment();
-        cacheMap.put(ImmutableKey.of(key), new CacheTarget<>(key, value, timeout,
-            timeUnit == null ? TimeUnit.MINUTES : timeUnit));
+        cacheMap.put(
+                ImmutableKey.of(key),
+                new CacheTarget<>(
+                        key, value, timeout, timeUnit == null ? TimeUnit.MINUTES : timeUnit));
     }
 
     @Override
@@ -85,8 +88,12 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
     public synchronized long getTimeout(K key) {
         var target = cacheMap.get(ImmutableKey.of(key));
         if (!safe(target)) return -1;
-        return target.getExpiredTime() == null ? 0 : Math.max(0,
-            DateTimeUtils.toMillis(target.getExpiredTime()) - System.currentTimeMillis());
+        return target.getExpiredTime() == null
+                ? 0
+                : Math.max(
+                        0,
+                        DateTimeUtils.toMillis(target.getExpiredTime())
+                                - System.currentTimeMillis());
     }
 
     /**

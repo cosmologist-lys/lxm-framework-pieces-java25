@@ -48,5 +48,4 @@ public class MongoBaseEntity extends MongoRootEntity {
         setCreatedAt();
         super.insert();
     }
-
 }

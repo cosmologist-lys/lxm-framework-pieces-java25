@@ -24,7 +24,7 @@ public class DefaultExcelExportStyler implements IExcelExportStyler {
     @Override
     public void createStyles(Workbook workbook, List<ExcelExportEntity> exportEntities) {
         this.styles = new HashMap<>(4);
-        //标题样式
+        // 标题样式
         CellStyle style = workbook.createCellStyle();
         Font titleFont = workbook.createFont();
         titleFont.setFontHeightInPoints((short) 22);
@@ -35,7 +35,7 @@ public class DefaultExcelExportStyler implements IExcelExportStyler {
         style.setVerticalAlignment(VerticalAlignment.CENTER);
         styles.put("titleStyle", style);
 
-        //表头样式
+        // 表头样式
         style = workbook.createCellStyle();
         style.cloneStyleFrom(styles.get("titleStyle"));
         Font headFont = workbook.createFont();
@@ -45,10 +45,10 @@ public class DefaultExcelExportStyler implements IExcelExportStyler {
         style.setFont(headFont);
         styles.put("headStyle", style);
 
-        //数据样式
+        // 数据样式
         createDataStyle(workbook, exportEntities);
 
-        //其他数据样式
+        // 其他数据样式
         style = workbook.createCellStyle();
         style.setAlignment(HorizontalAlignment.CENTER);
         style.setVerticalAlignment(VerticalAlignment.CENTER);
@@ -87,7 +87,8 @@ public class DefaultExcelExportStyler implements IExcelExportStyler {
         CellStyle style;
         for (ExcelExportEntity entity : exportEntities) {
             style = workbook.createCellStyle();
-            if (entity.getType() == CellType.NUMERIC && StringUtils.isNotEmpty(entity.getNumFormat())) {
+            if (entity.getType() == CellType.NUMERIC
+                    && StringUtils.isNotEmpty(entity.getNumFormat())) {
                 DataFormat format = workbook.createDataFormat();
                 style.setDataFormat(format.getFormat(entity.getNumFormat()));
             } else if (entity.getStyleType() == ExcelStyleType.MONEY) {

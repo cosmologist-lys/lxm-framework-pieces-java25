@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
  * @Describe
  **/
 @Slf4j
-
 public class Xmauth {
 
     private static LxmAuthLogic authLogic;

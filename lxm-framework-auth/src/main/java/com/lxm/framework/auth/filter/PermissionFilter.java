@@ -30,7 +30,7 @@ public interface PermissionFilter {
      */
     boolean hasPermission(String loginId, String permission);
 
-    default List<String> getPermissionList(){
+    default List<String> getPermissionList() {
         return getPermissionList(getLoginId());
     }
 
@@ -49,7 +49,6 @@ public interface PermissionFilter {
         throw new LxmPermissionException(AuthPrompts.UNQUALIFIED_PERMISSION);
     }
 
-
     /**
      * 根据mode类型来判断是否包含permission
      * 如果不包含，记得要抛错
@@ -57,7 +56,8 @@ public interface PermissionFilter {
      * @param mode       or , and
      * @param permission /
      */
-    default void checkPermissionArray(LxmMode mode, String... permission) throws LxmPermissionException {
+    default void checkPermissionArray(LxmMode mode, String... permission)
+            throws LxmPermissionException {
         boolean safe = false;
         if (LxmMode.AND.equals(mode)) {
             // and模式下，要全部都匹配

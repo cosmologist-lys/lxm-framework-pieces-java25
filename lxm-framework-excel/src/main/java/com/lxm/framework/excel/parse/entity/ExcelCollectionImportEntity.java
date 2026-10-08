@@ -16,10 +16,12 @@ public class ExcelCollectionImportEntity {
      * 集合对应的名称
      */
     private String name;
+
     /**
      * 实体对象
      */
     private Class<?> type;
+
     /**
      * 这个list下面的参数集合实体对象
      */

@@ -31,7 +31,7 @@ public interface LxmTokenDao {
      * @param value   值
      * @param timeout 过期时间 (单位: 秒)
      */
-    void set(@NonNull String key,@NonNull  String value, long timeout);
+    void set(@NonNull String key, @NonNull String value, long timeout);
 
     /**
      * 修改指定key的剩余存活时间 (单位: 秒)
@@ -39,7 +39,7 @@ public interface LxmTokenDao {
      * @param key     指定key
      * @param timeout 过期时间
      */
-    void update(@NonNull String key,@NonNull  String value, long timeout);
+    void update(@NonNull String key, @NonNull String value, long timeout);
 
     /**
      * 修改指定key的剩余存活时间 (单位: 秒)
@@ -64,7 +64,6 @@ public interface LxmTokenDao {
      */
     long getTimeout(@NonNull String key);
 
-
     //  for session //
 
     LxmSession getSession(@NonNull String key);
@@ -81,7 +80,7 @@ public interface LxmTokenDao {
      * @param session   /
      * @param timeout   /
      */
-    void updateSession(@NonNull LxmSession session,long timeout);
+    void updateSession(@NonNull LxmSession session, long timeout);
 
     /**
      * 删除session
@@ -94,7 +93,7 @@ public interface LxmTokenDao {
      * @param loginId
      * @param timeout
      */
-    void setForbid(String loginId,long timeout);
+    void setForbid(String loginId, long timeout);
 
     /**
      * 是否已被封禁

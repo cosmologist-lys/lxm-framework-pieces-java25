@@ -47,5 +47,4 @@ public class ExcelImportException extends AppException {
     public void setType(ExcelImportEnum type) {
         this.type = type;
     }
-
 }

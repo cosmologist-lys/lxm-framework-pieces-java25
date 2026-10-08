@@ -14,5 +14,4 @@ package com.lxm.framework.redis.inf;
 public interface RedisOnRemoveListener<T> {
 
     void follow(String key, T value);
-
 }

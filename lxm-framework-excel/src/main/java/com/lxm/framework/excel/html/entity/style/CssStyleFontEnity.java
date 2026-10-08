@@ -23,14 +23,17 @@ public class CssStyleFontEnity {
      *  italic  浏览器会显示一个斜体的字体样式。
      */
     private String style;
+
     /**
      *  bold 定义粗体字符
      */
     private String weight;
+
     /**
      * 仅支持**px获取不带px的数字大小
      */
-    private int    size;
+    private int size;
+
     private String family;
     private String decoration;
     private String color;
@@ -85,7 +88,13 @@ public class CssStyleFontEnity {
 
     @Override
     public String toString() {
-        return new StringBuilder().append(style).append(decoration).append(color).append(family)
-            .append(size).append(weight).toString();
+        return new StringBuilder()
+                .append(style)
+                .append(decoration)
+                .append(color)
+                .append(family)
+                .append(size)
+                .append(weight)
+                .toString();
     }
 }

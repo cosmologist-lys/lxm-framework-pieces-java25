@@ -32,9 +32,10 @@ public class BackgroundCssConvertImpl implements ICssConvertToExcel, ICssConvert
                     .setFillForegroundColor(PoiCssUtils.parseColor(style.getBackground()));
         } else if (cell instanceof HSSFCell) {
             cellStyle.setFillForegroundColor(
-                    PoiCssUtils.parseColor((HSSFWorkbook) cell.getRow().getSheet().getWorkbook(),
-                            style.getBackground()).getIndex());
+                    PoiCssUtils.parseColor(
+                                    (HSSFWorkbook) cell.getRow().getSheet().getWorkbook(),
+                                    style.getBackground())
+                            .getIndex());
         }
     }
-
 }

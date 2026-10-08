@@ -37,7 +37,6 @@ public class MongoHelper {
         return mgt.getCollectionName(ClassUtils.getUserClass(entity));
     }
 
-
     /**
      * 获取集合名称
      *
@@ -143,7 +142,8 @@ public class MongoHelper {
      * @param multi  是否更新所有
      * @return UpdateResult
      */
-    public static UpdateResult edit(Query query, Update update, Class<?> clz, String col, boolean multi) {
+    public static UpdateResult edit(
+            Query query, Update update, Class<?> clz, String col, boolean multi) {
         if (query == null || clz == null || StringUtils.isBlank(col)) {
             throw new AppException(500, "mongo helper edit error, param cannot be null");
         }
@@ -181,7 +181,11 @@ public class MongoHelper {
     public static String getPkName(Class<?> clz) {
         MongoPersistentEntity<?> persistentEntity = getPersistentEntity(clz);
         if (persistentEntity == null || persistentEntity.getIdProperty() == null) {
-            throw new AppException(500, "class " + clz.getName() + " mongo pk name is null, please check annotation @MongoId");
+            throw new AppException(
+                    500,
+                    "class "
+                            + clz.getName()
+                            + " mongo pk name is null, please check annotation @MongoId");
         }
         return persistentEntity.getIdProperty().getName();
     }
@@ -195,7 +199,11 @@ public class MongoHelper {
     public static String getPkColumnName(Class<?> clz) {
         MongoPersistentEntity<?> persistentEntity = getPersistentEntity(clz);
         if (persistentEntity == null || persistentEntity.getIdProperty() == null) {
-            throw new AppException(500, "class " + clz.getName() + " mongo pk column name is null, please check annotation @MongoId");
+            throw new AppException(
+                    500,
+                    "class "
+                            + clz.getName()
+                            + " mongo pk column name is null, please check annotation @MongoId");
         }
         return persistentEntity.getIdProperty().getFieldName();
     }
@@ -231,6 +239,8 @@ public class MongoHelper {
      */
     private static void checkMongoEntity(Class<?> clz) {
         if (clz == null || !MongoRootEntity.class.isAssignableFrom(clz))
-            throw new AppException(500, "mongo helper get list error, the returned entity must be a subclass of MongoEntity");
+            throw new AppException(
+                    500,
+                    "mongo helper get list error, the returned entity must be a subclass of MongoEntity");
     }
 }

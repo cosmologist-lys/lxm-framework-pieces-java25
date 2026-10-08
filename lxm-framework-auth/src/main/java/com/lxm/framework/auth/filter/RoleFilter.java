@@ -27,22 +27,22 @@ public interface RoleFilter {
      * @param role  /
      * @return  true or false
      */
-    boolean hasRole(String loginId,String role);
+    boolean hasRole(String loginId, String role);
 
-    default List<String> getRoleList(){
+    default List<String> getRoleList() {
         return getRoleList(getLoginId());
     }
 
-    default boolean hasRole(String role){
-        return hasRole(getLoginId(),role);
+    default boolean hasRole(String role) {
+        return hasRole(getLoginId(), role);
     }
 
-    default String getLoginId(){
+    default String getLoginId() {
         return Xmauth.getLoginId();
     }
 
-    default void checkRole(String role){
-        if (hasRole(getLoginId(), role)){
+    default void checkRole(String role) {
+        if (hasRole(getLoginId(), role)) {
             return;
         }
         throw new LxmRoleException(AuthPrompts.UNQUALIFIED_ROLE);
@@ -64,7 +64,7 @@ public interface RoleFilter {
             // or模式下，匹配上一个即可
             safe = hasRoleOr(roles);
         }
-        if (safe){
+        if (safe) {
             return;
         }
         throw new LxmRoleException(AuthPrompts.UNQUALIFIED_ROLE);
@@ -75,7 +75,7 @@ public interface RoleFilter {
      * @param roles
      * @return
      */
-    default boolean hasRoleOr(String... roles){
+    default boolean hasRoleOr(String... roles) {
         if (null == roles || 0 >= roles.length) {
             return true;
         }
@@ -95,7 +95,7 @@ public interface RoleFilter {
      * @param roles
      * @return
      */
-    default boolean hasRoleAnd(String... roles){
+    default boolean hasRoleAnd(String... roles) {
         if (null == roles || 0 >= roles.length) {
             return true;
         }

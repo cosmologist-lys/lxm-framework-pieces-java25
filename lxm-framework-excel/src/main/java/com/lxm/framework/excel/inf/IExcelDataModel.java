@@ -17,5 +17,4 @@ public interface IExcelDataModel {
      * @param rowNum
      */
     void setRowNum(int rowNum);
-
 }

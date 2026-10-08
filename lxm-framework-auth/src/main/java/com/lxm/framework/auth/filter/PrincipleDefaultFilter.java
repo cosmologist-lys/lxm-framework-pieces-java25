@@ -16,7 +16,6 @@ import java.util.List;
  * @Describe
  **/
 @Slf4j
-
 @ConditionalOnBean({RoleFilter.class, PermissionFilter.class})
 public class PrincipleDefaultFilter implements PrincipleFilter {
 

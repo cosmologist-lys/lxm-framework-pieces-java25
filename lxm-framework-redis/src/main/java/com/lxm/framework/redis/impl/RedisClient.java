@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
  * @Date 2023/2/7
  * @Describe 这里提供redis的实例
  **/
-
 public class RedisClient {
 
     private static RedisTemplate redisSession;
@@ -20,14 +19,14 @@ public class RedisClient {
     private static RedisMessageListenerContainer redisContainer;
 
     @Autowired
-    public RedisClient(@Qualifier("lxmRedisTemplate") RedisTemplate lxmRedisTemplate,
-                       @Qualifier("lxmRedisLocker") StringRedisTemplate lxmRedisLocker,
-                       @Qualifier("lxmRedisContainer") RedisMessageListenerContainer lxmRedisContainer) {
+    public RedisClient(
+            @Qualifier("lxmRedisTemplate") RedisTemplate lxmRedisTemplate,
+            @Qualifier("lxmRedisLocker") StringRedisTemplate lxmRedisLocker,
+            @Qualifier("lxmRedisContainer") RedisMessageListenerContainer lxmRedisContainer) {
         redisSession = lxmRedisTemplate;
         lockSession = lxmRedisLocker;
         redisContainer = lxmRedisContainer;
     }
-
 
     public static RedisStorage storage() {
         return RedisStorage.of(redisSession);
@@ -37,8 +36,7 @@ public class RedisClient {
         return RedisLocker.of(lockSession);
     }
 
-    public static RedisBus messageBus(){
-        return RedisBus.of(redisSession,redisContainer);
+    public static RedisBus messageBus() {
+        return RedisBus.of(redisSession, redisContainer);
     }
-
 }

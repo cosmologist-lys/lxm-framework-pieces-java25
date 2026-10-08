@@ -18,7 +18,6 @@ import java.util.UUID;
  * @Describe
  **/
 @Slf4j
-
 public class AuthActionDefault implements AuthAction {
 
     @Override
@@ -26,7 +25,8 @@ public class AuthActionDefault implements AuthAction {
         final LxmTokenProperties properties = AuthManager.getProperties();
         final String tokenPrefix = properties.getTokenPrefix();
         final String token = createTokenValue();
-        String finalTokenValue = (StringUtils.isNotBlank(tokenPrefix) ? tokenPrefix.concat(token) : token);
+        String finalTokenValue =
+                (StringUtils.isNotBlank(tokenPrefix) ? tokenPrefix.concat(token) : token);
         return finalTokenValue;
     }
 
@@ -40,9 +40,12 @@ public class AuthActionDefault implements AuthAction {
             return UUID.randomUUID().toString().replaceAll("-", "");
         }
         if (tokenStyle.equals(AuthConstants.TOKEN_STYLE_TIK)) {
-            return RandomStringUtils.secure().nextAlphanumeric(2)
-                    .concat("_").concat(RandomStringUtils.secure().nextAlphabetic(14))
-                    .concat("_").concat(RandomStringUtils.secure().nextAlphabetic(16));
+            return RandomStringUtils.secure()
+                    .nextAlphanumeric(2)
+                    .concat("_")
+                    .concat(RandomStringUtils.secure().nextAlphabetic(14))
+                    .concat("_")
+                    .concat(RandomStringUtils.secure().nextAlphabetic(16));
         }
         if (tokenStyle.equals(AuthConstants.TOKEN_STYLE_RANDOM_32)) {
             return RandomStringUtils.secure().nextAlphanumeric(32);
@@ -80,7 +83,12 @@ public class AuthActionDefault implements AuthAction {
     public void writeResponseCookie(String token) {
         final LxmTokenProperties properties = AuthManager.getProperties();
         final LxmResponse response = AuthManager.getContext().getResponse();
-        response.addCookie(properties.getTokenName(), token, "/", properties.getCookieDomain(), (int) properties.getTimeout());
+        response.addCookie(
+                properties.getTokenName(),
+                token,
+                "/",
+                properties.getCookieDomain(),
+                (int) properties.getTimeout());
     }
 
     @Override

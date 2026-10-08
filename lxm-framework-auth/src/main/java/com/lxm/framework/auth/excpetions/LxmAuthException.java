@@ -10,11 +10,9 @@ import com.lxm.framework.common.auth.errs.AbstractAuthException;
  **/
 public class LxmAuthException extends AbstractAuthException {
 
-
     private static final long serialVersionUID = 3125141211820147138L;
 
     public LxmAuthException(AuthPrompts prompts) {
         super(prompts);
     }
-
 }

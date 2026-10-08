@@ -6,7 +6,6 @@ package com.lxm.framework.auth.aop;
  * @Describe
  **/
 public enum LxmMode {
-
     OR,
     AND
 }

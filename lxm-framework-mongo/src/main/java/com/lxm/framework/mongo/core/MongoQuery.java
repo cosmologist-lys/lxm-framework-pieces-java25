@@ -17,8 +17,7 @@ import java.util.regex.Pattern;
  **/
 public class MongoQuery {
 
-    @Getter
-    private final Query query = new Query();
+    @Getter private final Query query = new Query();
 
     /**
      * 等于
@@ -53,7 +52,8 @@ public class MongoQuery {
      */
     public MongoQuery like(String column, String val) {
         if (StringUtils.isNotBlank(column) && StringUtils.isNotBlank(val)) {
-            Pattern pattern = Pattern.compile("^.*" + Pattern.quote(val) + ".*$", Pattern.CASE_INSENSITIVE);
+            Pattern pattern =
+                    Pattern.compile("^.*" + Pattern.quote(val) + ".*$", Pattern.CASE_INSENSITIVE);
             query.addCriteria(Criteria.where(column).regex(pattern));
         }
         return this;
@@ -156,7 +156,6 @@ public class MongoQuery {
         query.addCriteria(Criteria.where(column).gte(val1).lte(val2));
         return this;
     }
-
 
     /**
      * 正序排序

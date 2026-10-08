@@ -18,7 +18,6 @@ import java.util.List;
  * @Describe
  **/
 @Slf4j
-
 public class LxmServletFilter implements Filter {
 
     /**
@@ -88,7 +87,6 @@ public class LxmServletFilter implements Filter {
         return this;
     }
 
-
     /**
      * 获取 [拦截路由] 集合
      *
@@ -117,9 +115,9 @@ public class LxmServletFilter implements Filter {
         return this;
     }
 
-
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
         try {
             // 执行全局过滤器
             LxmRouterUtil.match(includeList, excludeList, () -> auth.run());
@@ -127,18 +125,23 @@ public class LxmServletFilter implements Filter {
             var mapper = tools.jackson.databind.json.JsonMapper.builder().build();
             response.setContentType("application/json;charset=UTF-8");
             if (response instanceof jakarta.servlet.http.HttpServletResponse http) {
-                http.setStatus(failure instanceof com.lxm.framework.common.auth.errs.AbstractAuthException authFailure
-                    ? (authFailure.getCode() == 1002 ? 403 : 401) : 500);
+                http.setStatus(
+                        failure
+                                        instanceof
+                                        com.lxm.framework.common.auth.errs.AbstractAuthException
+                                                authFailure
+                                ? (authFailure.getCode() == 1002 ? 403 : 401)
+                                : 500);
                 http.setHeader("Cache-Control", "no-store");
             }
             // ServletErrorStrategy 明确返回 JSON 字符串，先解析校验，再写出实际 JSON。
             var body = mapper.readTree(error.run(failure));
-            if (body == null || !body.isObject()) throw new ServletException("Auth error strategy must return a JSON object");
+            if (body == null || !body.isObject())
+                throw new ServletException("Auth error strategy must return a JSON object");
             response.getWriter().write(mapper.writeValueAsString(body));
             return;
         }
         // 执行
         chain.doFilter(request, response);
     }
-
 }

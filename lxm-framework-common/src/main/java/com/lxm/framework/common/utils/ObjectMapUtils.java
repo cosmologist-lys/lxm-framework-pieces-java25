@@ -29,7 +29,7 @@ public class ObjectMapUtils {
             Object value = getter != null ? getter.invoke(obj) : null;
             if (null != value) {
                 String stringValue = String.valueOf(value);
-                if (toUnderline){
+                if (toUnderline) {
                     key = StringFormatUtils.underline(key);
                 }
                 map.put(key, stringValue);

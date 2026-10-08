@@ -25,18 +25,19 @@ import java.util.List;
  **/
 public class EasyEmailSender {
 
-
-    private EasyEmailSender() {
-    }
+    private EasyEmailSender() {}
 
     public static EmailSender config(EmailCategory category, String emailAddress, String password) {
         var props = (java.util.Properties) category.props().clone();
         props.put("username", emailAddress);
-        Session session = Session.getInstance(props, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(emailAddress, password);
-            }
-        });
+        Session session =
+                Session.getInstance(
+                        props,
+                        new Authenticator() {
+                            protected PasswordAuthentication getPasswordAuthentication() {
+                                return new PasswordAuthentication(emailAddress, password);
+                            }
+                        });
         var message = new MimeMessage(session);
         return new EmailSender(message, emailAddress);
     }
@@ -80,7 +81,8 @@ public class EasyEmailSender {
         public EmailSender from(String fromDescription) throws EmailException {
             try {
                 String encodeNickName = MimeUtility.encodeText(fromDescription);
-                this.message.setFrom(new InternetAddress(encodeNickName + " <" + this.username + ">"));
+                this.message.setFrom(
+                        new InternetAddress(encodeNickName + " <" + this.username + ">"));
             } catch (Exception e) {
                 throw new EmailException(e);
             }
@@ -161,7 +163,9 @@ public class EasyEmailSender {
          * @return
          * @throws EmailException
          */
-        public EmailSender attach(ByteArrayOutputStream outputStream, String filename, String extension) throws EmailException {
+        public EmailSender attach(
+                ByteArrayOutputStream outputStream, String filename, String extension)
+                throws EmailException {
             this.attachments.add(createAttachment(outputStream, filename, extension));
             return this;
         }
@@ -179,21 +183,27 @@ public class EasyEmailSender {
             return this;
         }
 
-        private EmailSender addRecipient(String[] recipient, Message.RecipientType type) throws MessagingException {
-            if (recipient==null || recipient.length==0) throw new MessagingException("At least one recipient is required");
-            String addresses=String.join(",",recipient).replace(";",",");
-            this.message.setRecipients(type, InternetAddress.parse(addresses,true));
+        private EmailSender addRecipient(String[] recipient, Message.RecipientType type)
+                throws MessagingException {
+            if (recipient == null || recipient.length == 0)
+                throw new MessagingException("At least one recipient is required");
+            String addresses = String.join(",", recipient).replace(";", ",");
+            this.message.setRecipients(type, InternetAddress.parse(addresses, true));
             return this;
         }
 
-        private MimeBodyPart createAttachment(ByteArrayOutputStream outputStream, String filename, String extension) throws EmailException {
-            DataSource aAttachment = new ByteArrayDataSource(outputStream.toByteArray(), "application/octet-stream");
+        private MimeBodyPart createAttachment(
+                ByteArrayOutputStream outputStream, String filename, String extension)
+                throws EmailException {
+            DataSource aAttachment =
+                    new ByteArrayDataSource(outputStream.toByteArray(), "application/octet-stream");
             MimeBodyPart attachmentPart = new MimeBodyPart();
             try {
                 if (StringUtils.isNotBlank(extension) && !extension.startsWith(".")) {
                     extension = "." + extension;
                 }
-                String file = StringUtils.isBlank(extension) ? filename : filename.concat(extension);
+                String file =
+                        StringUtils.isBlank(extension) ? filename : filename.concat(extension);
                 attachmentPart.setDataHandler(new DataHandler(aAttachment));
                 attachmentPart.setFileName(file);
             } catch (Exception e) {
@@ -207,7 +217,10 @@ public class EasyEmailSender {
             FileDataSource fds = new FileDataSource(file);
             try {
                 attachmentPart.setDataHandler(new DataHandler(fds));
-                attachmentPart.setFileName(null == fileName ? MimeUtility.encodeText(fds.getName()) : MimeUtility.encodeText(fileName));
+                attachmentPart.setFileName(
+                        null == fileName
+                                ? MimeUtility.encodeText(fds.getName())
+                                : MimeUtility.encodeText(fileName));
             } catch (Exception e) {
                 throw new EmailException(e);
             }
@@ -219,7 +232,8 @@ public class EasyEmailSender {
             DataHandler dataHandler = new DataHandler(url);
             try {
                 attachmentPart.setDataHandler(dataHandler);
-                attachmentPart.setFileName(null == fileName ? "untitled-file" : MimeUtility.encodeText(fileName));
+                attachmentPart.setFileName(
+                        null == fileName ? "untitled-file" : MimeUtility.encodeText(fileName));
             } catch (Exception e) {
                 throw new EmailException(e);
             }
@@ -246,7 +260,8 @@ public class EasyEmailSender {
 
         public void send() {
             if (text == null && html == null) {
-                throw new IllegalArgumentException("At least one context has to be provided: Text or Html");
+                throw new IllegalArgumentException(
+                        "At least one context has to be provided: Text or Html");
             }
 
             MimeMultipart cover;
@@ -288,5 +303,4 @@ public class EasyEmailSender {
             }
         }
     }
-
 }

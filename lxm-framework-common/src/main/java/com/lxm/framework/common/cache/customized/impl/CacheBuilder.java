@@ -19,7 +19,8 @@ public class CacheBuilder {
      * @param <V>  泛型
      * @return
      */
-    public static <K, V> TimeCache<K, V> newTimeCache(int initialCapacity, int period, TimeUnit timeUnit) {
+    public static <K, V> TimeCache<K, V> newTimeCache(
+            int initialCapacity, int period, TimeUnit timeUnit) {
         return new TimeCache<K, V>(initialCapacity, period, timeUnit);
     }
 

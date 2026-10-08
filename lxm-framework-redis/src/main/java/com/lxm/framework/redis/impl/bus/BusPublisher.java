@@ -28,12 +28,12 @@ public class BusPublisher implements BusPublisherSession {
     public BusPayloadInf topic(@NonNull String topic) {
         // 因为是set，无需担心topic()和topics()来回调用
         topics.add(topic.trim());
-        return new BusPayload(session,topics);
+        return new BusPayload(session, topics);
     }
 
     @Override
     public BusPayloadInf topics(@NonNull String... topics) {
         this.topics.addAll(Arrays.asList(topics));
-        return new BusPayload(session,this.topics);
+        return new BusPayload(session, this.topics);
     }
 }

@@ -21,13 +21,23 @@ import java.util.Properties;
  * @Describe
  **/
 @Slf4j
-@Intercepts({@Signature(type = ParameterHandler.class, method = "setParameters", args = PreparedStatement.class)})
+@Intercepts({
+    @Signature(
+            type = ParameterHandler.class,
+            method = "setParameters",
+            args = PreparedStatement.class)
+})
 public class ParameterInterceptor extends AbstractInterceptor implements Interceptor {
 
-
     private final com.lxm.framework.common.principle.PrincipleProvider principles;
-    public ParameterInterceptor() { this(() -> null); }
-    public ParameterInterceptor(com.lxm.framework.common.principle.PrincipleProvider principles) { this.principles = principles; }
+
+    public ParameterInterceptor() {
+        this(() -> null);
+    }
+
+    public ParameterInterceptor(com.lxm.framework.common.principle.PrincipleProvider principles) {
+        this.principles = principles;
+    }
 
     @Override
     public Object plugin(Object target) {
@@ -35,8 +45,7 @@ public class ParameterInterceptor extends AbstractInterceptor implements Interce
     }
 
     @Override
-    public void setProperties(Properties properties) {
-    }
+    public void setProperties(Properties properties) {}
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -49,7 +58,8 @@ public class ParameterInterceptor extends AbstractInterceptor implements Interce
         MetaObject metaObject = SystemMetaObject.forObject(parameterHandler);
         MappedStatement mappedStatement = (MappedStatement) metaObject.getValue("mappedStatement");
         SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
-        if (SqlCommandType.INSERT.equals(sqlCommandType) || SqlCommandType.UPDATE.equals(sqlCommandType)) {
+        if (SqlCommandType.INSERT.equals(sqlCommandType)
+                || SqlCommandType.UPDATE.equals(sqlCommandType)) {
             insertOrUpdate(metaObject, mappedStatement);
         }
         return invocation.proceed();
@@ -59,7 +69,10 @@ public class ParameterInterceptor extends AbstractInterceptor implements Interce
         BoundSql boundSql = (BoundSql) metaObject.getValue("boundSql");
         if (boundSql.getParameterObject() == null) return;
         MetaObject pm = SystemMetaObject.forObject(boundSql.getParameterObject());
-        InterceptUtils.fillIdentity(boundSql.getParameterObject(), principles.current(), SqlCommandType.INSERT.equals(mappedStatement.getSqlCommandType()));
+        InterceptUtils.fillIdentity(
+                boundSql.getParameterObject(),
+                principles.current(),
+                SqlCommandType.INSERT.equals(mappedStatement.getSqlCommandType()));
         // 打了标记的，统统跳过
         if (InterceptUtils.escape(mappedStatement.getId())) {
             return;
@@ -73,14 +86,14 @@ public class ParameterInterceptor extends AbstractInterceptor implements Interce
             InterceptUtils.setFieldDeleted(boundSql, pm, false);
             InterceptUtils.setFieldDeletedTime(boundSql, pm, null);
             InterceptUtils.setFieldCreatedTime(boundSql, pm, now);
-
-
         }
         // 处理删除时间
         if (InterceptUtils.isDeleteMapper(mappedStatement.getId())) {
             InterceptUtils.setFieldDeletedTime(boundSql, pm, null);
             InterceptUtils.setFieldDeleted(boundSql, pm, true);
         }
-        log.debug("lxm parameter-interceptor have processed parameters , boundSql : {}", boundSql.getSql());
+        log.debug(
+                "lxm parameter-interceptor have processed parameters , boundSql : {}",
+                boundSql.getSql());
     }
 }

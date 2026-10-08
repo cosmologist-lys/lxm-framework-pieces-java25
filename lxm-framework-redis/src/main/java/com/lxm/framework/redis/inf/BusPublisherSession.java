@@ -7,7 +7,7 @@ import lombok.NonNull;
  * @Date 2023/5/12
  * @Describe
  **/
-public interface BusPublisherSession extends BusTopic<BusPublisherSession.BusPayloadInf>{
+public interface BusPublisherSession extends BusTopic<BusPublisherSession.BusPayloadInf> {
 
     interface BusPayloadInf {
         BusPubInf payload(@NonNull Object payload);

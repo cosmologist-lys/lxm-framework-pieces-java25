@@ -16,8 +16,7 @@ public class TokenBox implements Serializable {
     private String tokenValue;
     private String device;
 
-    public TokenBox() {
-    }
+    public TokenBox() {}
 
     public TokenBox(String tokenValue, String device) {
         this.tokenValue = tokenValue;

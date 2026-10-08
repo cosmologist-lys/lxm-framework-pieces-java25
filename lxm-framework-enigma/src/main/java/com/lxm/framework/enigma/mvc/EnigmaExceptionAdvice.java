@@ -10,8 +10,9 @@ import org.springframework.core.annotation.Order;
 @Order(-10000)
 public final class EnigmaExceptionAdvice {
     @ExceptionHandler(EnigmaException.class)
-    public JsonResult<?> handle(EnigmaException failure,HttpServletResponse response) {
-        response.setStatus(failure.status());response.setHeader("Cache-Control","no-store");
-        return JsonResult.json(failure.code(),failure.getMessage());
+    public JsonResult<?> handle(EnigmaException failure, HttpServletResponse response) {
+        response.setStatus(failure.status());
+        response.setHeader("Cache-Control", "no-store");
+        return JsonResult.json(failure.code(), failure.getMessage());
     }
 }

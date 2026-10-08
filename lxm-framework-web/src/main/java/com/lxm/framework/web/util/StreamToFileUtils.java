@@ -16,7 +16,12 @@ import java.nio.charset.StandardCharsets;
  **/
 public class StreamToFileUtils {
 
-    public static void toFile(HttpServletResponse response, String content, Charset charset, String fileName, String extension) {
+    public static void toFile(
+            HttpServletResponse response,
+            String content,
+            Charset charset,
+            String fileName,
+            String extension) {
         toFile(response, content.getBytes(charset), fileName, extension);
     }
 
@@ -28,12 +33,15 @@ public class StreamToFileUtils {
         toFile(response, bytes, fileName, null);
     }
 
-    public static void toFile(HttpServletResponse response, byte[] bytes, String fileName, String extension) {
+    public static void toFile(
+            HttpServletResponse response, byte[] bytes, String fileName, String extension) {
         if (StringUtils.isBlank(extension)) {
             extension = "txt";
         }
         final String fullFileName = fileName.concat(".").concat(extension);
-        response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(fullFileName, StandardCharsets.UTF_8));
+        response.setHeader(
+                "Content-disposition",
+                "attachment;filename=" + URLEncoder.encode(fullFileName, StandardCharsets.UTF_8));
         response.setContentType("application/x-download");
         try (ServletOutputStream os = response.getOutputStream()) {
             os.write(bytes);

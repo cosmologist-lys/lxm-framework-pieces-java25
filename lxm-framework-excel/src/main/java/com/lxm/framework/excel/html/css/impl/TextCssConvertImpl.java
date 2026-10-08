@@ -76,5 +76,4 @@ public class TextCssConvertImpl implements ICssConvertToExcel, ICssConvertToHtml
             }
         }
     }
-
 }

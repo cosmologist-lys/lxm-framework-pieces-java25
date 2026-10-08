@@ -45,13 +45,14 @@ public class TimeCache<K, V> extends AbstractCache<K, V> implements AutoCloseabl
     }
 
     @Override
-    public void close() { closeScanner(); }
+    public void close() {
+        closeScanner();
+    }
 
     @Override
     public int size() {
         return this.cacheMap.size();
     }
-
 
     /**
      * 对于定时的缓存，必须指定存放的时间。不然就应该使用permanentCache
@@ -63,5 +64,4 @@ public class TimeCache<K, V> extends AbstractCache<K, V> implements AutoCloseabl
     public void put(K key, V value) {
         throw new AppException(-1, "requires expire time of time-cache");
     }
-
 }

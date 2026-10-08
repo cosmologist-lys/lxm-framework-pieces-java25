@@ -1,6 +1,5 @@
 package com.lxm.framework.excel.exception;
 
-
 import com.lxm.framework.common.AppException;
 import com.lxm.framework.excel.exception.enums.ExcelExportEnum;
 
@@ -44,5 +43,4 @@ public class ExcelExportException extends AppException {
     public void setType(ExcelExportEnum type) {
         this.type = type;
     }
-
 }

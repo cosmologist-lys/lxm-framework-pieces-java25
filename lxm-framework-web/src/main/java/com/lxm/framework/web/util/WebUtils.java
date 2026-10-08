@@ -15,6 +15,7 @@ import java.util.Objects;
 public class WebUtils {
 
     public static final String DEFAULT_LANG_PARAMETER = "lang";
+
     /**
      * 获取请求地址
      *
@@ -44,7 +45,10 @@ public class WebUtils {
      * @return ip
      */
     public static String getRemoteAddr() {
-        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        HttpServletRequest request =
+                ((ServletRequestAttributes)
+                                Objects.requireNonNull(RequestContextHolder.getRequestAttributes()))
+                        .getRequest();
         return getRemoteAddr(request);
     }
 
@@ -93,5 +97,4 @@ public class WebUtils {
         }
         return org.springframework.util.StringUtils.parseLocale(lang);
     }
-
 }

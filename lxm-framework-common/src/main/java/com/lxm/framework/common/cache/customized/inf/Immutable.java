@@ -10,5 +10,4 @@ import java.io.Serializable;
 public interface Immutable<T> extends Serializable {
 
     T get();
-
 }

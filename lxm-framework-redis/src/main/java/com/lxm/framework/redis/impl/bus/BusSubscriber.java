@@ -21,7 +21,10 @@ public class BusSubscriber implements BusSubscriberSession {
     private final Boolean isOnce;
     private final Set<String> topics;
 
-    public BusSubscriber(RedisTemplate<String, Object> session, RedisMessageListenerContainer container,Boolean isOnce) {
+    public BusSubscriber(
+            RedisTemplate<String, Object> session,
+            RedisMessageListenerContainer container,
+            Boolean isOnce) {
         this.session = session;
         this.container = container;
         this.isOnce = isOnce;
@@ -32,12 +35,12 @@ public class BusSubscriber implements BusSubscriberSession {
     public BusConsumerInf topic(@NonNull String topic) {
         // 因为是set，无需担心topic()和topics()来回调用
         topics.add(topic.trim());
-        return new BusConsumer(session,container,this.topics,isOnce);
+        return new BusConsumer(session, container, this.topics, isOnce);
     }
 
     @Override
     public BusConsumerInf topics(@NonNull String @NonNull ... topics) {
         this.topics.addAll(Arrays.asList(topics));
-        return new BusConsumer(session,container,this.topics,isOnce);
+        return new BusConsumer(session, container, this.topics, isOnce);
     }
 }

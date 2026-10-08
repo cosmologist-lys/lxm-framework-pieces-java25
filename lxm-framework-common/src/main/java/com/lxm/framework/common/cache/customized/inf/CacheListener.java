@@ -8,5 +8,5 @@ package com.lxm.framework.common.cache.customized.inf;
 @FunctionalInterface
 public interface CacheListener<K, V> {
 
-    void onRemove(K k,V v);
+    void onRemove(K k, V v);
 }

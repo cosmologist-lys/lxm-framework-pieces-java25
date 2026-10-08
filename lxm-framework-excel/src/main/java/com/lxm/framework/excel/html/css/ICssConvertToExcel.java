@@ -29,5 +29,4 @@ public interface ICssConvertToExcel {
      * @param style
      */
     public void convertToExcel(Cell cell, CellStyle cellStyle, CellStyleEntity style);
-
 }

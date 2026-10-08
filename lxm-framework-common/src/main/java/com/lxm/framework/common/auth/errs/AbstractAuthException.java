@@ -2,7 +2,6 @@ package com.lxm.framework.common.auth.errs;
 
 import com.lxm.framework.common.errs.BaseError;
 
-
 /**
  * @Author: Lys
  * @Date 2023/6/8

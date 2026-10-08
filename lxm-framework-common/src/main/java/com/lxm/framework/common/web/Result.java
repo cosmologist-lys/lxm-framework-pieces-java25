@@ -103,6 +103,12 @@ public final class Result<T> implements Serializable {
 
     @Override
     public String toString() {
-        return "Result [code=" + code + ", message=" + message + ", returnValue=" + returnValue + "]";
+        return "Result [code="
+                + code
+                + ", message="
+                + message
+                + ", returnValue="
+                + returnValue
+                + "]";
     }
 }

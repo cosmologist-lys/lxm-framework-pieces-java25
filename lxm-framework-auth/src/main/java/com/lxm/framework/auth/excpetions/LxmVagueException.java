@@ -11,8 +11,7 @@ import java.io.Serial;
  * @Describe
  **/
 public class LxmVagueException extends AbstractAuthException {
-    @Serial
-    private static final long serialVersionUID = 4234414520559354019L;
+    @Serial private static final long serialVersionUID = 4234414520559354019L;
 
     public LxmVagueException(AuthPrompts error) {
         super(error);

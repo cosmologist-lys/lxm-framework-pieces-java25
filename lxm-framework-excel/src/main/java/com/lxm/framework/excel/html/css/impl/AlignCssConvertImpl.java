@@ -40,5 +40,4 @@ public class AlignCssConvertImpl implements ICssConvertToExcel, ICssConvertToHtm
             cellStyle.setVerticalAlignment(VerticalAlignment.JUSTIFY);
         }
     }
-
 }

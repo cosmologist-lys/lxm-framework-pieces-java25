@@ -49,5 +49,4 @@ public class WidthCssConverImpl implements ICssConvertToExcel, ICssConvertToHtml
             }
         }
     }
-
 }

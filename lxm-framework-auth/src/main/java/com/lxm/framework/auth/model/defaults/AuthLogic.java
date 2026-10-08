@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
  * @Describe
  **/
 @Slf4j
-
 public class AuthLogic implements LxmAuthLogic {
 
     private final AuthAction authAction;
@@ -126,7 +125,9 @@ public class AuthLogic implements LxmAuthLogic {
         }
         if (AuthManager.getProperties().getIsReadCookie()) {
             // 登录了，且是read-cookie模式，就清除cookie
-            AuthManager.getContext().getResponse().deleteCookie(AuthManager.getProperties().getTokenName());
+            AuthManager.getContext()
+                    .getResponse()
+                    .deleteCookie(AuthManager.getProperties().getTokenName());
         }
         final LxmTokenDao dao = AuthManager.getTokenDao();
         final String loginId = dao.get(token);
@@ -157,7 +158,8 @@ public class AuthLogic implements LxmAuthLogic {
 
     @Override
     public String tourist() {
-        String loginId = AuthConstants.TOURIST.concat(RandomStringUtils.secure().nextAlphabetic(18));
+        String loginId =
+                AuthConstants.TOURIST.concat(RandomStringUtils.secure().nextAlphabetic(18));
         final String token = authAction.createFullToken();
         var session = authAction.createSession(loginId);
         session.addTokenBox(new TokenBox(token, "guest"));
@@ -245,7 +247,8 @@ public class AuthLogic implements LxmAuthLogic {
         final LxmSession session = AuthManager.getTokenDao().getSession(loginId);
         if (session == null || session.getTokenBox(token) == null) return null;
         if (AuthManager.getProperties().getAutoRenew()) {
-            AuthManager.getTokenDao().updateTimeout(token, AuthManager.getProperties().getTimeout());
+            AuthManager.getTokenDao()
+                    .updateTimeout(token, AuthManager.getProperties().getTimeout());
         }
         return loginId;
     }

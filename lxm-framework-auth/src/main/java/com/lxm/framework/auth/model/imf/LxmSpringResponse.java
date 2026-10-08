@@ -21,7 +21,6 @@ public class LxmSpringResponse implements LxmResponse {
     }
 
     @Override
-
     public HttpServletResponse getSource() {
         return this.response;
     }
@@ -32,7 +31,8 @@ public class LxmSpringResponse implements LxmResponse {
     }
 
     @Override
-    public void addCookie(@NonNull String name, String value, String path, String domain, int timeout) {
+    public void addCookie(
+            @NonNull String name, String value, String path, String domain, int timeout) {
         final Cookie cookie = new Cookie(name.trim(), value);
         if (StringUtils.isBlank(path)) {
             path = "/";

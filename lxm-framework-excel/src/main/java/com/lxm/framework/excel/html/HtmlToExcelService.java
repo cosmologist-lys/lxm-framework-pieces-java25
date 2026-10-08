@@ -89,7 +89,7 @@ public class HtmlToExcelService {
                 cellsOccupied.clear();
                 sheet = workbook.createSheet(sheetName);
             }
-            //数据样式
+            // 数据样式
             defaultCellStyle = workbook.createCellStyle();
             defaultCellStyle.setAlignment(HorizontalAlignment.CENTER);
             defaultCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
@@ -97,7 +97,7 @@ public class HtmlToExcelService {
             dataFont.setFontName("Arial");
             dataFont.setFontHeightInPoints((short) 10);
             defaultCellStyle.setFont(dataFont);
-            //生成一个默认样式
+            // 生成一个默认样式
             processTable(table);
             maxrowMap.put(sheetName, maxRow);
             sheets.put(sheetName, sheet);

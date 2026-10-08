@@ -23,22 +23,30 @@ public class RedisDbConfig {
         var config = new RedisStandaloneConfiguration(properties.getHost(), properties.getPort());
         config.setDatabase(properties.getDatabase());
         config.setUsername(properties.getUsername());
-        if (properties.getPassword() != null) config.setPassword(RedisPassword.of(properties.getPassword()));
-        var client = JedisClientConfiguration.builder().connectTimeout(properties.getTimeout()).readTimeout(properties.getTimeout());
+        if (properties.getPassword() != null)
+            config.setPassword(RedisPassword.of(properties.getPassword()));
+        var client =
+                JedisClientConfiguration.builder()
+                        .connectTimeout(properties.getTimeout())
+                        .readTimeout(properties.getTimeout());
         client.usePooling();
         return new JedisConnectionFactory(config, client.build());
     }
+
     @Bean("lxmRedisContainer")
     @ConditionalOnMissingBean(name = "lxmRedisContainer")
-    public RedisMessageListenerContainer lxmRedisContainer(@Qualifier("lxmRedisConnectionFactory") RedisConnectionFactory factory) {
+    public RedisMessageListenerContainer lxmRedisContainer(
+            @Qualifier("lxmRedisConnectionFactory") RedisConnectionFactory factory) {
         var container = new RedisMessageListenerContainer();
         container.setConnectionFactory(factory);
         return container;
     }
+
     @Bean("lxmRedisTemplate")
     @ConditionalOnMissingBean(name = "lxmRedisTemplate")
-    public RedisTemplate<String, Object> lxmRedisTemplate(@Qualifier("lxmRedisConnectionFactory") RedisConnectionFactory factory,
-                                                        @Value("${lfp.redis.namespace:lfp:v2:}") String namespace) {
+    public RedisTemplate<String, Object> lxmRedisTemplate(
+            @Qualifier("lxmRedisConnectionFactory") RedisConnectionFactory factory,
+            @Value("${lfp.redis.namespace:lfp:v2:}") String namespace) {
         var template = new RedisTemplate<String, Object>();
         template.setConnectionFactory(factory);
         var key = new NamespacedKeySerializer(namespace);
@@ -49,19 +57,24 @@ public class RedisDbConfig {
         template.setHashValueSerializer(value);
         return template;
     }
+
     @Bean("lxmRedisLocker")
     @ConditionalOnMissingBean(name = "lxmRedisLocker")
-    public StringRedisTemplate lxmRedisLocker(@Qualifier("lxmRedisConnectionFactory") RedisConnectionFactory factory,
-                                             @Value("${lfp.redis.namespace:lfp:v2:}") String namespace) {
+    public StringRedisTemplate lxmRedisLocker(
+            @Qualifier("lxmRedisConnectionFactory") RedisConnectionFactory factory,
+            @Value("${lfp.redis.namespace:lfp:v2:}") String namespace) {
         var template = new StringRedisTemplate();
         template.setConnectionFactory(factory);
         template.setKeySerializer(new NamespacedKeySerializer(namespace));
         return template;
     }
+
     @Bean
     @ConditionalOnMissingBean(com.lxm.framework.redis.impl.RedisClient.class)
-    public com.lxm.framework.redis.impl.RedisClient redisClient(@Qualifier("lxmRedisTemplate") RedisTemplate<String, Object> template,
-          @Qualifier("lxmRedisLocker") StringRedisTemplate locker, @Qualifier("lxmRedisContainer") RedisMessageListenerContainer container) {
+    public com.lxm.framework.redis.impl.RedisClient redisClient(
+            @Qualifier("lxmRedisTemplate") RedisTemplate<String, Object> template,
+            @Qualifier("lxmRedisLocker") StringRedisTemplate locker,
+            @Qualifier("lxmRedisContainer") RedisMessageListenerContainer container) {
         return new com.lxm.framework.redis.impl.RedisClient(template, locker, container);
     }
 }

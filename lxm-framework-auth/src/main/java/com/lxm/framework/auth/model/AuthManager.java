@@ -96,7 +96,10 @@ public class AuthManager {
         if (null == principleFilter) {
             synchronized (LOCKER) {
                 if (null == principleFilter) {
-                    setPrincipleFilter(new PrincipleDefaultFilter(new RoleDefaultBlankFilter(), new PermissionDefaultBlankFilter()));
+                    setPrincipleFilter(
+                            new PrincipleDefaultFilter(
+                                    new RoleDefaultBlankFilter(),
+                                    new PermissionDefaultBlankFilter()));
                 }
             }
         }

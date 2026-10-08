@@ -9,7 +9,8 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 public final class FrameworkJackson {
-    private FrameworkJackson() { }
+    private FrameworkJackson() {}
+
     public static SimpleModule dates() {
         var module = new SimpleModule("lxm-json");
         var time = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -23,7 +24,12 @@ public final class FrameworkJackson {
         module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(datetime));
         return module;
     }
+
     public static JsonMapper mapper() {
-        return JsonMapper.builder().defaultDateFormat(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).addModule(JacksonConfig.module()).build();
+        return JsonMapper.builder()
+                .defaultDateFormat(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .addModule(JacksonConfig.module())
+                .build();
     }
 }

@@ -32,5 +32,4 @@ public class ListUtils {
         }
         return result;
     }
-
 }

@@ -80,7 +80,10 @@ public class StorageImpl implements StoreSession {
 
     protected <T> T get(Class<T> tClass, boolean delete) {
         beforeUsing();
-        Object value = delete ? session.opsForValue().getAndDelete(getKey()) : session.opsForValue().get(getKey());
+        Object value =
+                delete
+                        ? session.opsForValue().getAndDelete(getKey())
+                        : session.opsForValue().get(getKey());
         if (null != tClass && tClass.isInstance(value)) {
             return (T) value;
         }
@@ -130,5 +133,4 @@ public class StorageImpl implements StoreSession {
         cleanser.onRemove(getKey(), list);
         return list;
     }
-
 }

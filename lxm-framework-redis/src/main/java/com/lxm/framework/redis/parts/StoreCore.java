@@ -22,7 +22,6 @@ public class StoreCore extends AbstractRedisPartCore {
     private RedisOnRemoveListener listener;
     private boolean permanent = false;
 
-
     public StoreCore() {
         // 默认24小时
         this.timeUnit = TimeUnit.HOURS;
@@ -55,12 +54,11 @@ public class StoreCore extends AbstractRedisPartCore {
 
     public StoreCore setValue(Object value) {
         this.value = value;
-        if (null == clazz){
+        if (null == clazz) {
             this.clazz = value.getClass();
         }
         return this;
     }
-
 
     public TimeUnit getTimeUnit() {
         return timeUnit;
@@ -74,8 +72,8 @@ public class StoreCore extends AbstractRedisPartCore {
     }
 
     public Class<?> getClazz() {
-        if (null == clazz){
-            if (null != value){
+        if (null == clazz) {
+            if (null != value) {
                 return value.getClass();
             }
         }

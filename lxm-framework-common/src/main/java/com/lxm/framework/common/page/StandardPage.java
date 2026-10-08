@@ -10,7 +10,6 @@ import java.util.List;
  **/
 public interface StandardPage<T> extends Serializable {
 
-
     void putRecords(List<T> records);
 
     void putTotal(long total);

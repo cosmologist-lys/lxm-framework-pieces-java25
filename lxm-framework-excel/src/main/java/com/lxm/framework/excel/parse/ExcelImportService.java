@@ -47,18 +47,22 @@ public class ExcelImportService<T> {
      * 成功的行
      */
     private List<Row> successRow;
+
     /**
      * 失败的行
      */
     private List<Row> failRow;
+
     /**
      * 验证错误集合
      */
     private List<ExcelImportErrorResult> failList = new ArrayList<>();
+
     /**
      * 数据处理器失败数据
      */
     private List<ExcelVerifyHandlerResult> failHandlerList = new ArrayList<>();
+
     /**
      * 错误单元格的样式
      */
@@ -73,7 +77,8 @@ public class ExcelImportService<T> {
      * @return 导入结果
      * @throws Exception 异常
      */
-    public ExcelImportResult<T> importExcelByIs(InputStream inputstream, Class<T> pojoClass, ImportParams params) throws Exception {
+    public ExcelImportResult<T> importExcelByIs(
+            InputStream inputstream, Class<T> pojoClass, ImportParams params) throws Exception {
         if (inputstream == null || pojoClass == null) {
             throw new ExcelImportException("invalid excel import params");
         }
@@ -82,7 +87,7 @@ public class ExcelImportService<T> {
         }
         ExcelImportResult<T> importResult = new ExcelImportResult<>();
         if (params.isMoreInfo()) {
-            //将导入数据流缓存下来
+            // 将导入数据流缓存下来
             try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
                 byte[] buffer = new byte[1024];
                 int len;
@@ -93,7 +98,7 @@ public class ExcelImportService<T> {
                 Workbook book;
                 try (InputStream userIs = new ByteArrayInputStream(baos.toByteArray())) {
                     book = WorkbookFactory.create(userIs);
-                    //创建验证错误单元格的样式
+                    // 创建验证错误单元格的样式
                     errorCellStyle = book.createCellStyle();
                     Font font = book.createFont();
                     font.setColor(Font.COLOR_RED);
@@ -105,11 +110,12 @@ public class ExcelImportService<T> {
                 }
                 try (InputStream in = new ByteArrayInputStream(baos.toByteArray())) {
                     Workbook successBook = WorkbookFactory.create(in);
-                    importResult.setSuccessWorkbook(removeSuperfluousRows(successBook, failRow, params));
+                    importResult.setSuccessWorkbook(
+                            removeSuperfluousRows(successBook, failRow, params));
                 }
             }
         } else {
-            try (Workbook workbook=WorkbookFactory.create(inputstream)) {
+            try (Workbook workbook = WorkbookFactory.create(inputstream)) {
                 importResult.setList(importParse(workbook, pojoClass, params));
             }
         }
@@ -128,7 +134,9 @@ public class ExcelImportService<T> {
      */
     private List<T> importParse(Workbook book, Class<T> pojoClass, ImportParams params) {
         List<T> result = new ArrayList<>();
-        for (int i = params.getStartSheetIndex(); i < params.getStartSheetIndex() + params.getSheetNum(); i++) {
+        for (int i = params.getStartSheetIndex();
+                i < params.getStartSheetIndex() + params.getSheetNum();
+                i++) {
             result.addAll(importParse(book.getSheetAt(i), pojoClass, params));
         }
         return result;
@@ -145,18 +153,18 @@ public class ExcelImportService<T> {
     @SuppressWarnings("unchecked")
     private List<T> importParse(Sheet sheet, Class<T> pojoClass, ImportParams params) {
         Iterator<Row> rows = sheet.rowIterator();
-        //过滤标题行
+        // 过滤标题行
         for (int j = 0; j < params.getTitleRows(); j++) {
             rows.next();
         }
-        //获取导入模板表头集合
+        // 获取导入模板表头集合
         Map<String, Integer> headerMap = getHeaderMap(sheet, rows.next());
-        //创建导入实体集合
+        // 创建导入实体集合
         Map<Integer, Object> importEntityMap = parseImportEntity(pojoClass, params, headerMap);
         if (importEntityMap.isEmpty()) {
             throw new ExcelImportException("excel import parameters are not defined");
         }
-        //跳过无效行
+        // 跳过无效行
         for (int i = 0; i < params.getStartRows(); i++) {
             rows.next();
         }
@@ -167,7 +175,7 @@ public class ExcelImportService<T> {
         int mergedRegionLast;
         Row row;
         while (rows.hasNext()) {
-            //判断是否手动设置了读取行数，若超过就跳出
+            // 判断是否手动设置了读取行数，若超过就跳出
             if (params.getReadRowLen() > 0 && readRow > params.getReadRowLen()) {
                 break;
             }
@@ -180,9 +188,9 @@ public class ExcelImportService<T> {
             if (cell == null) {
                 continue;
             }
-            //判断是否合并单元格
+            // 判断是否合并单元格
             mergedRegionLast = getMergedRegion(sheet, cell.getRowIndex(), cell.getColumnIndex());
-            //主键值为空，则整行数据无效
+            // 主键值为空，则整行数据无效
             if (mergedRegionLast == -1) {
                 object = (T) createObject(pojoClass);
                 setFieldValue(params, object, importEntityMap, row, false);
@@ -194,7 +202,7 @@ public class ExcelImportService<T> {
                     setFieldValue(params, object, importEntityMap, row, true);
                 }
             }
-            //验证数据的合法性
+            // 验证数据的合法性
             ExcelImportErrorResult importErrorModel = verifyingDataValidity(object, row, params);
             if (importErrorModel == null) {
                 collection.add(object);
@@ -219,12 +227,19 @@ public class ExcelImportService<T> {
             obj = clazz.getDeclaredConstructor().newInstance();
             Field[] fields = EntityUtils.getAllFields(clazz);
             for (Field field : fields) {
-                if (field.isAnnotationPresent(ExcelCollection.class) && PoiPublicUtil.isCollection(field.getType())) {
+                if (field.isAnnotationPresent(ExcelCollection.class)
+                        && PoiPublicUtil.isCollection(field.getType())) {
                     ExcelCollection collection = field.getAnnotation(ExcelCollection.class);
-                    PoiReflectorUtil.fromCache(clazz).setValue(obj, field.getName(), collection.type().getDeclaredConstructor().newInstance());
-                } else if (field.isAnnotationPresent(Excel.class) || field.isAnnotationPresent(ExcelEntity.class)) {
+                    PoiReflectorUtil.fromCache(clazz)
+                            .setValue(
+                                    obj,
+                                    field.getName(),
+                                    collection.type().getDeclaredConstructor().newInstance());
+                } else if (field.isAnnotationPresent(Excel.class)
+                        || field.isAnnotationPresent(ExcelEntity.class)) {
                     if (!PoiPublicUtil.isJavaClass(field.getType()) && !field.getType().isEnum()) {
-                        PoiReflectorUtil.fromCache(clazz).setValue(obj, field.getName(), createObject(field.getType()));
+                        PoiReflectorUtil.fromCache(clazz)
+                                .setValue(obj, field.getName(), createObject(field.getType()));
                     }
                 }
             }
@@ -245,11 +260,20 @@ public class ExcelImportService<T> {
      * @param isCollection    是否集合
      */
     @SuppressWarnings("unchecked")
-    private void setFieldValue(ImportParams params, Object object, Map<Integer, Object> importEntityMap, Row row, boolean isCollection) {
+    private void setFieldValue(
+            ImportParams params,
+            Object object,
+            Map<Integer, Object> importEntityMap,
+            Row row,
+            boolean isCollection) {
         for (Map.Entry<Integer, Object> entry : importEntityMap.entrySet()) {
             if (entry.getValue() instanceof ExcelCollectionImportEntity) {
-                ExcelCollectionImportEntity collectionImportEntity = (ExcelCollectionImportEntity) entry.getValue();
-                Collection collection = (Collection) PoiReflectorUtil.fromCache(object.getClass()).getValue(object, collectionImportEntity.getName());
+                ExcelCollectionImportEntity collectionImportEntity =
+                        (ExcelCollectionImportEntity) entry.getValue();
+                Collection collection =
+                        (Collection)
+                                PoiReflectorUtil.fromCache(object.getClass())
+                                        .getValue(object, collectionImportEntity.getName());
                 Object obj = createObject(collectionImportEntity.getType());
                 if (obj instanceof IExcelDataModel) {
                     ((IExcelDataModel) obj).setRowNum(row.getRowNum());
@@ -265,11 +289,22 @@ public class ExcelImportService<T> {
                 if (params.getDataHandler() != null) {
                     o = params.getDataHandler().importHandler(importEntity.getName(), o);
                 }
-                if (StringUtils.isNotEmpty(importEntity.getDict()) && params.getDictHandler() != null) {
-                    o = params.getDictHandler().importHandler(importEntity.getDict(), importEntity.getName(), o);
+                if (StringUtils.isNotEmpty(importEntity.getDict())
+                        && params.getDictHandler() != null) {
+                    o =
+                            params.getDictHandler()
+                                    .importHandler(
+                                            importEntity.getDict(), importEntity.getName(), o);
                 }
-                if (StringUtils.isNotEmpty(importEntity.getSuffix()) && o != null && o.toString().endsWith(importEntity.getSuffix())) {
-                    o = o.toString().substring(0, o.toString().length() - importEntity.getSuffix().length());
+                if (StringUtils.isNotEmpty(importEntity.getSuffix())
+                        && o != null
+                        && o.toString().endsWith(importEntity.getSuffix())) {
+                    o =
+                            o.toString()
+                                    .substring(
+                                            0,
+                                            o.toString().length()
+                                                    - importEntity.getSuffix().length());
                 }
                 if (importEntity.getReplace() != null && importEntity.getReplace().length > 0) {
                     o = PoiPublicUtil.replaceValue(importEntity.getReplace(), String.valueOf(o), 2);
@@ -288,7 +323,11 @@ public class ExcelImportService<T> {
                         importEntity.getSetMethod().invoke(t, convertedValue(importEntity, o));
                     } catch (Exception e) {
                         log.error("excel import set field value error", e);
-                        throw new ExcelImportException("wrong data type in the " + entry.getKey() + " column of row " + row.getRowNum());
+                        throw new ExcelImportException(
+                                "wrong data type in the "
+                                        + entry.getKey()
+                                        + " column of row "
+                                        + row.getRowNum());
                     }
                 }
             }
@@ -308,7 +347,10 @@ public class ExcelImportService<T> {
         Object result = null;
         switch (cell.getCellType()) {
             case STRING:
-                result = cell.getStringCellValue() != null ? cell.getStringCellValue().trim().replace("\n", "") : null;
+                result =
+                        cell.getStringCellValue() != null
+                                ? cell.getStringCellValue().trim().replace("\n", "")
+                                : null;
                 break;
             case NUMERIC:
                 if (DateUtil.isCellDateFormatted(cell)) {
@@ -329,7 +371,10 @@ public class ExcelImportService<T> {
                     result = readNumericCell(cell);
                 } catch (Exception e1) {
                     try {
-                        result = cell.getRichStringCellValue() == null ? "" : cell.getRichStringCellValue().getString();
+                        result =
+                                cell.getRichStringCellValue() == null
+                                        ? ""
+                                        : cell.getRichStringCellValue().getString();
                     } catch (Exception e2) {
                         throw new RuntimeException("获取公式类型的单元格失败", e2);
                     }
@@ -363,7 +408,9 @@ public class ExcelImportService<T> {
             return null;
         }
         cell.setCellType(CellType.STRING);
-        return cell.getStringCellValue() != null ? cell.getStringCellValue().trim().replace("\n", "") : null;
+        return cell.getStringCellValue() != null
+                ? cell.getStringCellValue().trim().replace("\n", "")
+                : null;
     }
 
     private Object convertedValue(ExcelImportEntity importEntity, Object value) {
@@ -446,7 +493,11 @@ public class ExcelImportService<T> {
                 }
             }
         } catch (Exception e) {
-            log.error("excel parser converted value error, importEntity = {}, value = {}", importEntity, value, e);
+            log.error(
+                    "excel parser converted value error, importEntity = {}, value = {}",
+                    importEntity,
+                    value,
+                    e);
             o = null;
         }
         return o;
@@ -460,7 +511,8 @@ public class ExcelImportService<T> {
      * @param headerMap 表头集合
      * @return 导入实体集合
      */
-    private Map<Integer, Object> parseImportEntity(Class<?> pojoClass, ImportParams params, Map<String, Integer> headerMap) {
+    private Map<Integer, Object> parseImportEntity(
+            Class<?> pojoClass, ImportParams params, Map<String, Integer> headerMap) {
         Map<Integer, Object> importEntityMap = new HashMap<>(4);
         if (pojoClass == Map.class) {
             ExcelImportEntity importEntity;
@@ -486,7 +538,7 @@ public class ExcelImportService<T> {
         if (row == null) {
             throw new ExcelImportException("excel import must have headers");
         }
-        //表头集合
+        // 表头集合
         Map<String, Integer> headerMap = new LinkedHashMap<>();
         Iterator<Cell> headerCellIterator = row.cellIterator();
         while (headerCellIterator.hasNext()) {
@@ -516,7 +568,8 @@ public class ExcelImportService<T> {
                 if (column == range.getFirstColumn() && column == range.getLastColumn()) {
                     return range.getLastRow() - row;
                 } else if (column > range.getFirstColumn() && column < range.getLastColumn()) {
-                    throw new ExcelImportException("excel import only row merge is supported, column merge is not supported");
+                    throw new ExcelImportException(
+                            "excel import only row merge is supported, column merge is not supported");
                 }
             }
         }
@@ -532,44 +585,75 @@ public class ExcelImportService<T> {
      * @param getMethod       当excelEntity不为null有效，get方法
      * @param excelEntity     被@ExcelEntity标记的属性
      */
-    private void getAllImportExcelField(Map<String, Integer> headerMap, Map<Integer, Object> importEntityMap, Class<?> pojoClass, Method getMethod, ExcelEntity excelEntity) {
+    private void getAllImportExcelField(
+            Map<String, Integer> headerMap,
+            Map<Integer, Object> importEntityMap,
+            Class<?> pojoClass,
+            Method getMethod,
+            ExcelEntity excelEntity) {
         for (Field field : EntityUtils.getAllFields(pojoClass)) {
             if (field.isAnnotationPresent(ExcelCollection.class)) {
                 if (!PoiPublicUtil.isCollection(field.getType())) {
-                    log.warn("The {} property: {} has 【@ExcelCollection】, but it's not a collection.", pojoClass.getName(), field.getName());
+                    log.warn(
+                            "The {} property: {} has 【@ExcelCollection】, but it's not a collection.",
+                            pojoClass.getName(),
+                            field.getName());
                     continue;
                 }
                 ExcelCollection excel = field.getAnnotation(ExcelCollection.class);
                 if (!excel.importField() || importEntityMap.containsKey(0)) {
                     continue;
                 }
-                //获取集合元素类型
+                // 获取集合元素类型
                 ParameterizedType pt = (ParameterizedType) field.getGenericType();
                 Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
-                //创建集合导入子集合
+                // 创建集合导入子集合
                 Map<Integer, Object> importItemMap = new HashMap<>(4);
                 if (PoiPublicUtil.isJavaClass(clz)) {
                     if (!headerMap.containsKey(excel.name())) {
-                        throw new ExcelImportException("Incorrect excel template, there is no " + excel.name() + "cloumn");
+                        throw new ExcelImportException(
+                                "Incorrect excel template, there is no " + excel.name() + "cloumn");
                     }
                     ExcelImportEntity importEntity = new ExcelImportEntity();
                     importEntity.setName(excel.name());
                     importItemMap.put(headerMap.get(excel.name()), importEntity);
                 } else {
-                    getExcelCollectionFieldList(headerMap, importItemMap, clz, EntityUtils.getAllFields(clz), null, excel.name());
+                    getExcelCollectionFieldList(
+                            headerMap,
+                            importItemMap,
+                            clz,
+                            EntityUtils.getAllFields(clz),
+                            null,
+                            excel.name());
                 }
-                ExcelCollectionImportEntity collectionItemParams = new ExcelCollectionImportEntity();
+                ExcelCollectionImportEntity collectionItemParams =
+                        new ExcelCollectionImportEntity();
                 collectionItemParams.setName(field.getName());
                 collectionItemParams.setType(clz);
                 collectionItemParams.setImportEntityMap(importItemMap);
                 importEntityMap.put(-1, collectionItemParams);
             } else if (field.isAnnotationPresent(ExcelEntity.class)) {
-                if (PoiPublicUtil.isCollection(field.getType()) || PoiPublicUtil.isJavaClass(field.getType())) {
-                    throw new ExcelImportException("The" + pojoClass.getName() + " is not pojo，but it has 【@ExcelEntity】.");
+                if (PoiPublicUtil.isCollection(field.getType())
+                        || PoiPublicUtil.isJavaClass(field.getType())) {
+                    throw new ExcelImportException(
+                            "The"
+                                    + pojoClass.getName()
+                                    + " is not pojo，but it has 【@ExcelEntity】.");
                 }
-                getAllImportExcelField(headerMap, importEntityMap, field.getType(), PoiPublicUtil.getGetMethod(pojoClass, field), field.getAnnotation(ExcelEntity.class));
+                getAllImportExcelField(
+                        headerMap,
+                        importEntityMap,
+                        field.getType(),
+                        PoiPublicUtil.getGetMethod(pojoClass, field),
+                        field.getAnnotation(ExcelEntity.class));
             } else if (field.isAnnotationPresent(Excel.class)) {
-                addEntityToMap(headerMap, importEntityMap, pojoClass, field, getMethod, excelEntity == null ? null : excelEntity.name());
+                addEntityToMap(
+                        headerMap,
+                        importEntityMap,
+                        pojoClass,
+                        field,
+                        getMethod,
+                        excelEntity == null ? null : excelEntity.name());
             }
         }
     }
@@ -583,14 +667,29 @@ public class ExcelImportService<T> {
      * @param getMethod       当excelEntity不为null有效，get方法
      * @param groupName       集合分组，例如：学生_名称
      */
-    private void getExcelCollectionFieldList(Map<String, Integer> headerMap, Map<Integer, Object> importEntityMap, Class<?> pojoClass, Field[] fields, Method getMethod, String groupName) {
+    private void getExcelCollectionFieldList(
+            Map<String, Integer> headerMap,
+            Map<Integer, Object> importEntityMap,
+            Class<?> pojoClass,
+            Field[] fields,
+            Method getMethod,
+            String groupName) {
         for (Field field : fields) {
             if (field.isAnnotationPresent(ExcelCollection.class)) {
-                throw new ExcelImportException("The field : " + field.getName() + " incorrect, there can be no more ExcelCollection in the ExcelCollection");
+                throw new ExcelImportException(
+                        "The field : "
+                                + field.getName()
+                                + " incorrect, there can be no more ExcelCollection in the ExcelCollection");
             } else if (field.isAnnotationPresent(Excel.class)) {
                 addEntityToMap(headerMap, importEntityMap, pojoClass, field, getMethod, groupName);
             } else if (field.isAnnotationPresent(ExcelEntity.class)) {
-                getExcelCollectionFieldList(headerMap, importEntityMap, field.getType(), EntityUtils.getAllFields(field.getType()), PoiPublicUtil.getGetMethod(pojoClass, field), groupName);
+                getExcelCollectionFieldList(
+                        headerMap,
+                        importEntityMap,
+                        field.getType(),
+                        EntityUtils.getAllFields(field.getType()),
+                        PoiPublicUtil.getGetMethod(pojoClass, field),
+                        groupName);
             }
         }
     }
@@ -604,23 +703,35 @@ public class ExcelImportService<T> {
      * @param getMethod       当excelEntity不为null有效，get方法集合
      * @param groupName       javabean属性时有效，例如：学生_年龄
      */
-    private void addEntityToMap(Map<String, Integer> headerMap, Map<Integer, Object> importEntityMap, Class<?> pojoClass, Field field, Method getMethod, String groupName) {
+    private void addEntityToMap(
+            Map<String, Integer> headerMap,
+            Map<Integer, Object> importEntityMap,
+            Class<?> pojoClass,
+            Field field,
+            Method getMethod,
+            String groupName) {
         if (!PoiPublicUtil.isJavaClass(field.getType())) {
-            throw new ExcelImportException("The field : " + field.getName() + " incorrect, the @excel annotation must be in Java base when imported");
+            throw new ExcelImportException(
+                    "The field : "
+                            + field.getName()
+                            + " incorrect, the @excel annotation must be in Java base when imported");
         }
         Excel excel = field.getAnnotation(Excel.class);
         if (!excel.importField()) {
             return;
         }
-        String name = StringUtils.isBlank(groupName) ? excel.name() : groupName + "_" + excel.name();
+        String name =
+                StringUtils.isBlank(groupName) ? excel.name() : groupName + "_" + excel.name();
         if (!headerMap.containsKey(name)) {
-            throw new ExcelImportException("Incorrect excel template, there is no " + excel.name() + "cloumn");
+            throw new ExcelImportException(
+                    "Incorrect excel template, there is no " + excel.name() + "cloumn");
         }
         ExcelImportEntity importEntity = new ExcelImportEntity();
         importEntity.setName(name);
         importEntity.setReplace(excel.replace());
         importEntity.setSuffix(excel.suffix());
-        importEntity.setSetMethod(PoiReflectorUtil.fromCache(pojoClass).getSetMethod(field.getName()));
+        importEntity.setSetMethod(
+                PoiReflectorUtil.fromCache(pojoClass).getSetMethod(field.getName()));
         importEntity.setFormat(excel.format());
         importEntity.setDict(excel.dict());
         importEntity.setEnumImportMethod(excel.enumImportMethod());
@@ -731,5 +842,4 @@ public class ExcelImportService<T> {
         }
         return book;
     }
-
 }

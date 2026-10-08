@@ -10,5 +10,4 @@ public interface MessageBusSession {
     BusSubscriberTagSession subscriber();
 
     BusPublisherSession publisher();
-
 }

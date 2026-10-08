@@ -51,23 +51,32 @@ public class BorderCssConverImpl implements ICssConvertToExcel, ICssConvertToHtm
             return;
         }
         CellStyleBorderEntity border = style.getBorder();
-        for (String pos : new String[]{HtmlCssConstant.TOP, HtmlCssConstant.RIGHT, HtmlCssConstant.BOTTOM, HtmlCssConstant.LEFT}) {
+        for (String pos :
+                new String[] {
+                    HtmlCssConstant.TOP,
+                    HtmlCssConstant.RIGHT,
+                    HtmlCssConstant.BOTTOM,
+                    HtmlCssConstant.LEFT
+                }) {
             String posName = StringUtils.capitalize(pos.toLowerCase());
             // color
             String colorAttr = null;
             try {
-                colorAttr = (String) MethodUtils.invokeMethod(border,
-                        "getBorder" + posName + "Color");
+                colorAttr =
+                        (String) MethodUtils.invokeMethod(border, "getBorder" + posName + "Color");
             } catch (Exception e) {
                 log.error("Set Border Style Error Caused.", e);
             }
             if (StringUtils.isNotEmpty(colorAttr)) {
                 if (cell instanceof HSSFCell) {
-                    HSSFColor poiColor = PoiCssUtils
-                            .parseColor((HSSFWorkbook) cell.getSheet().getWorkbook(), colorAttr);
+                    HSSFColor poiColor =
+                            PoiCssUtils.parseColor(
+                                    (HSSFWorkbook) cell.getSheet().getWorkbook(), colorAttr);
                     if (poiColor != null) {
                         try {
-                            MethodUtils.invokeMethod(cellStyle, "set" + posName + "BorderColor",
+                            MethodUtils.invokeMethod(
+                                    cellStyle,
+                                    "set" + posName + "BorderColor",
                                     poiColor.getIndex());
                         } catch (Exception e) {
                             log.error("Set Border Color Error Caused.", e);
@@ -78,8 +87,8 @@ public class BorderCssConverImpl implements ICssConvertToExcel, ICssConvertToHtm
                     XSSFColor poiColor = PoiCssUtils.parseColor(colorAttr);
                     if (poiColor != null) {
                         try {
-                            MethodUtils.invokeMethod(cellStyle, "set" + posName + "BorderColor",
-                                    poiColor);
+                            MethodUtils.invokeMethod(
+                                    cellStyle, "set" + posName + "BorderColor", poiColor);
                         } catch (Exception e) {
                             log.error("Set Border Color Error Caused.", e);
                         }
@@ -89,8 +98,8 @@ public class BorderCssConverImpl implements ICssConvertToExcel, ICssConvertToHtm
             // width
             int width = 0;
             try {
-                String widthStr = (String) MethodUtils.invokeMethod(border,
-                        "getBorder" + posName + "Width");
+                String widthStr =
+                        (String) MethodUtils.invokeMethod(border, "getBorder" + posName + "Width");
                 if (PoiCssUtils.isNum(widthStr)) {
                     width = Integer.parseInt(widthStr);
                 }
@@ -99,8 +108,8 @@ public class BorderCssConverImpl implements ICssConvertToExcel, ICssConvertToHtm
             }
             String styleValue = null;
             try {
-                styleValue = (String) MethodUtils.invokeMethod(border,
-                        "getBorder" + posName + "Style");
+                styleValue =
+                        (String) MethodUtils.invokeMethod(border, "getBorder" + posName + "Style");
             } catch (Exception e) {
                 log.error("Set Border Style Error Caused.", e);
             }
@@ -114,7 +123,8 @@ public class BorderCssConverImpl implements ICssConvertToExcel, ICssConvertToHtm
                 } else {
                     shortValue = BorderStyle.THIN;
                 }
-            } else if (ArrayUtils.contains(new String[]{HtmlCssConstant.NONE, HtmlCssConstant.HIDDEN}, styleValue)) {
+            } else if (ArrayUtils.contains(
+                    new String[] {HtmlCssConstant.NONE, HtmlCssConstant.HIDDEN}, styleValue)) {
                 shortValue = BorderStyle.NONE;
             } else if (HtmlCssConstant.DOUBLE.equals(styleValue)) {
                 shortValue = BorderStyle.DOUBLE;
@@ -137,5 +147,4 @@ public class BorderCssConverImpl implements ICssConvertToExcel, ICssConvertToHtm
             }
         }
     }
-
 }

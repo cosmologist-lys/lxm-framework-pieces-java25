@@ -31,13 +31,17 @@ public class EasyEmailRecipient implements AutoCloseable {
     private final Store store;
     private Folder folder;
 
-    public static EasyEmailRecipient config(EmailCategory category, String emailAddress, String password) {
+    public static EasyEmailRecipient config(
+            EmailCategory category, String emailAddress, String password) {
         var props = (java.util.Properties) category.props().clone();
-        Session session = Session.getInstance(props, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(emailAddress, password);
-            }
-        });
+        Session session =
+                Session.getInstance(
+                        props,
+                        new Authenticator() {
+                            protected PasswordAuthentication getPasswordAuthentication() {
+                                return new PasswordAuthentication(emailAddress, password);
+                            }
+                        });
         Store store = null;
         try {
             store = session.getStore();
@@ -72,7 +76,7 @@ public class EasyEmailRecipient implements AutoCloseable {
 
     public void close() {
         try {
-            if (this.folder!=null && this.folder.isOpen()) {
+            if (this.folder != null && this.folder.isOpen()) {
                 this.folder.close(false);
             }
             if (this.store.isConnected()) {
@@ -111,7 +115,7 @@ public class EasyEmailRecipient implements AutoCloseable {
             if (!greenLight) {
                 throw new EmailException("连接已关闭");
             }
-            if (messages.length==0) return this;
+            if (messages.length == 0) return this;
             content.setLength(0);
             final int len = messages.length - 1;
             try {
@@ -126,7 +130,8 @@ public class EasyEmailRecipient implements AutoCloseable {
                             if (StringUtils.equalsAnyIgnoreCase(fromAddress, this.fromEmail)) {
                                 if (StringUtils.isNotBlank(subjectCharacterContains)) {
                                     readSubject(msg);
-                                    if (StringUtils.contains(this.subject, subjectCharacterContains)) {
+                                    if (StringUtils.contains(
+                                            this.subject, subjectCharacterContains)) {
                                         readSingleMessage(msg);
                                         break;
                                     }
@@ -223,7 +228,6 @@ public class EasyEmailRecipient implements AutoCloseable {
             throw new EmailException("尚未指定要读取的邮件或连接已关闭");
         }
 
-
         // -------------------------- below are private ---------------------------------//
         private void readSingleMessage(MimeMessage msg) throws MessagingException, IOException {
             greenLight = true;
@@ -233,11 +237,13 @@ public class EasyEmailRecipient implements AutoCloseable {
             readContent(msg);
         }
 
-        private void readSubject(Message msg) throws MessagingException, UnsupportedEncodingException {
+        private void readSubject(Message msg)
+                throws MessagingException, UnsupportedEncodingException {
             this.subject = MimeUtility.decodeText(msg.getSubject());
         }
 
-        private void readFromAddress(MimeMessage msg) throws MessagingException, UnsupportedEncodingException {
+        private void readFromAddress(MimeMessage msg)
+                throws MessagingException, UnsupportedEncodingException {
             Address[] froms = msg.getFrom();
             if (Objects.isNull(froms) || froms.length == 0) {
                 throw new MessagingException("no send address found");
@@ -297,7 +303,5 @@ public class EasyEmailRecipient implements AutoCloseable {
                 return EmailStreamUtil.copyStreamToString(inputStream, StandardCharsets.UTF_8);
             }
         }
-
-
     }
 }

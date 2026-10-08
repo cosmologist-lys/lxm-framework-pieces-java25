@@ -155,7 +155,7 @@ public class DateTimeUtils {
         return instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
-    public static long toMillis(LocalDateTime time){
+    public static long toMillis(LocalDateTime time) {
         return Timestamp.valueOf(time).getTime();
     }
 
@@ -208,5 +208,4 @@ public class DateTimeUtils {
         }
         return null;
     }
-
 }

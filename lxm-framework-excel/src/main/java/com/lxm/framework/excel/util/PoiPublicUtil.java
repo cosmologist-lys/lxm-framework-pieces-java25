@@ -55,9 +55,13 @@ public final class PoiPublicUtil {
      * @return boolean
      */
     public static boolean isJavaClass(Class<?> clz) {
-        return clz.isPrimitive() || clz.getPackage() == null || "java.lang".equals(clz.getPackage().getName())
-                || "java.math".equals(clz.getPackage().getName()) || "java.sql".equals(clz.getPackage().getName())
-                || "java.util".equals(clz.getPackage().getName()) || "java.time".equals(clz.getPackage().getName());
+        return clz.isPrimitive()
+                || clz.getPackage() == null
+                || "java.lang".equals(clz.getPackage().getName())
+                || "java.math".equals(clz.getPackage().getName())
+                || "java.sql".equals(clz.getPackage().getName())
+                || "java.util".equals(clz.getPackage().getName())
+                || "java.time".equals(clz.getPackage().getName());
     }
 
     /**
@@ -93,7 +97,8 @@ public final class PoiPublicUtil {
      * @param field     字段
      * @return 方法集合
      */
-    public static List<Method> getGetMethods(List<Method> getMethods, Class<?> pojoClass, Field field) {
+    public static List<Method> getGetMethods(
+            List<Method> getMethods, Class<?> pojoClass, Field field) {
         if (getMethods == null) {
             getMethods = new ArrayList<>();
         }
@@ -108,8 +113,15 @@ public final class PoiPublicUtil {
      * @return 单元格数据类型
      */
     public static CellType getCellTypeByClz(Class<?> clz) {
-        if (clz == Integer.class || clz == Long.class || clz == Double.class || clz == Float.class || clz == BigDecimal.class ||
-                clz == int.class || clz == long.class || clz == double.class || clz == float.class) {
+        if (clz == Integer.class
+                || clz == Long.class
+                || clz == Double.class
+                || clz == Float.class
+                || clz == BigDecimal.class
+                || clz == int.class
+                || clz == long.class
+                || clz == double.class
+                || clz == float.class) {
             return CellType.NUMERIC;
         } else if (clz == Boolean.class || clz == boolean.class) {
             return CellType.BOOLEAN;
@@ -167,7 +179,9 @@ public final class PoiPublicUtil {
             return null;
         }
         String dateStr = null;
-        if (value instanceof Date || value instanceof java.sql.Time || value instanceof java.sql.Timestamp) {
+        if (value instanceof Date
+                || value instanceof java.sql.Time
+                || value instanceof java.sql.Timestamp) {
             SimpleDateFormat format = new SimpleDateFormat(formatStr);
             dateStr = format.format(value);
         } else if (value instanceof TemporalAccessor) {
@@ -211,7 +225,8 @@ public final class PoiPublicUtil {
      * @param firstCol 第一列
      * @param lastCol  最后一列
      */
-    public static void addMergedRegion(Sheet sheet, int firstRow, int lastRow, int firstCol, int lastCol) {
+    public static void addMergedRegion(
+            Sheet sheet, int firstRow, int lastRow, int firstCol, int lastCol) {
         if (firstRow == lastRow && firstCol == lastCol) return;
         sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol));
     }
@@ -256,7 +271,7 @@ public final class PoiPublicUtil {
      * @return List
      */
     public static <T> List<List<T>> subListByCount(List<T> data, int count) {
-        return ListUtils.subListByCount(data,count);
+        return ListUtils.subListByCount(data, count);
     }
 
     /**
@@ -266,14 +281,15 @@ public final class PoiPublicUtil {
      * @param pojoClass 导出类
      * @return List<ExcelExportEntity>
      */
-    public static List<ExcelExportEntity> createExcelExportEntities(ExportParams params, Class<?> pojoClass) {
+    public static List<ExcelExportEntity> createExcelExportEntities(
+            ExportParams params, Class<?> pojoClass) {
         if (params == null || pojoClass == null) {
             throw new ExcelExportException(ExcelExportEnum.PARAMETER_ERROR);
         }
         try {
             List<ExcelExportEntity> exportEntities = new ArrayList<>();
             if (params.isAddIndex()) {
-                //添加Index列,保证是第一排
+                // 添加Index列,保证是第一排
                 ExcelExportEntity indexExcelEntity = new ExcelExportEntity();
                 indexExcelEntity.setOrderNum(Integer.MIN_VALUE);
                 indexExcelEntity.setName(params.getIndexName());
@@ -281,7 +297,13 @@ public final class PoiPublicUtil {
                 indexExcelEntity.setWidth(10);
                 exportEntities.add(indexExcelEntity);
             }
-            getAllExportExcelField(params.getInclusions(), params.getExclusions(), exportEntities, pojoClass, null, null);
+            getAllExportExcelField(
+                    params.getInclusions(),
+                    params.getExclusions(),
+                    exportEntities,
+                    pojoClass,
+                    null,
+                    null);
             return exportEntities;
         } catch (Exception e) {
             throw new ExcelExportException(ExcelExportEnum.EXPORT_ERROR, e);
@@ -291,7 +313,13 @@ public final class PoiPublicUtil {
     /**
      * 获取需要导出的全部字段
      */
-    public static void getAllExportExcelField(String[] inclusions, String[] exclusions, List<ExcelExportEntity> exportEntities, Class<?> pojoClass, List<Method> getMethods, ExcelEntity excelEntity) {
+    public static void getAllExportExcelField(
+            String[] inclusions,
+            String[] exclusions,
+            List<ExcelExportEntity> exportEntities,
+            Class<?> pojoClass,
+            List<Method> getMethods,
+            ExcelEntity excelEntity) {
         // 得到所有字段
         Field[] fields = EntityUtils.getAllFields(pojoClass);
         // 遍历整个filed
@@ -302,27 +330,40 @@ public final class PoiPublicUtil {
             }
             // 首先判断Excel 可能一下特殊数据用户回自定义处理
             if (field.getAnnotation(Excel.class) != null) {
-                exportEntities.add(createExcelExportEntity(field, pojoClass, getMethods, excelEntity));
-            } else if (field.isAnnotationPresent(ExcelCollection.class) && PoiPublicUtil.isCollection(field.getType())) {
+                exportEntities.add(
+                        createExcelExportEntity(field, pojoClass, getMethods, excelEntity));
+            } else if (field.isAnnotationPresent(ExcelCollection.class)
+                    && PoiPublicUtil.isCollection(field.getType())) {
                 ParameterizedType pt = (ParameterizedType) field.getGenericType();
                 Class<?> clz = (Class<?>) pt.getActualTypeArguments()[0];
                 ExcelExportEntity excelExportEntity = new ExcelExportEntity();
                 List<ExcelExportEntity> exportEntityitems = new ArrayList<>();
                 if (!PoiPublicUtil.isJavaClass(clz)) {
-                    getAllExportExcelField(inclusions, exclusions, exportEntityitems, clz, null, null);
+                    getAllExportExcelField(
+                            inclusions, exclusions, exportEntityitems, clz, null, null);
                 } else {
                     excelExportEntity.setType(PoiPublicUtil.getCellTypeByClz(clz));
                 }
                 ExcelCollection excel = field.getAnnotation(ExcelCollection.class);
-                excelExportEntity.setName(StringUtils.isEmpty(excel.name()) ? "column" + excel.orderNum() : excel.name());
+                excelExportEntity.setName(
+                        StringUtils.isEmpty(excel.name())
+                                ? "column" + excel.orderNum()
+                                : excel.name());
                 excelExportEntity.setOrderNum(excel.orderNum());
-                excelExportEntity.setGetMethods(PoiPublicUtil.getGetMethods(getMethods, pojoClass, field));
+                excelExportEntity.setGetMethods(
+                        PoiPublicUtil.getGetMethods(getMethods, pojoClass, field));
                 excelExportEntity.setList(exportEntityitems);
                 exportEntities.add(excelExportEntity);
             } else if (field.isAnnotationPresent(ExcelEntity.class)) {
                 ExcelEntity excel = field.getAnnotation(ExcelEntity.class);
                 if (StringUtils.isNotBlank(excel.name())) {
-                    getAllExportExcelField(inclusions, exclusions, exportEntities, field.getType(), PoiPublicUtil.getGetMethods(getMethods, pojoClass, field), excel);
+                    getAllExportExcelField(
+                            inclusions,
+                            exclusions,
+                            exportEntities,
+                            field.getType(),
+                            PoiPublicUtil.getGetMethods(getMethods, pojoClass, field),
+                            excel);
                 }
             }
         }
@@ -336,15 +377,21 @@ public final class PoiPublicUtil {
      * @param field      字段
      * @return boolean
      */
-    public static boolean isNotExcelExportField(String[] inclusions, String[] exclusions, Field field) {
+    public static boolean isNotExcelExportField(
+            String[] inclusions, String[] exclusions, Field field) {
         boolean boo = true;
-        if (field.getAnnotation(ExcelCollection.class) != null && (inclusions == null || ArrayUtils.contains(inclusions, field.getName())
-                && (exclusions == null || !ArrayUtils.contains(exclusions, field.getName())))) {
+        if (field.getAnnotation(ExcelCollection.class) != null
+                && (inclusions == null
+                        || ArrayUtils.contains(inclusions, field.getName())
+                                && (exclusions == null
+                                        || !ArrayUtils.contains(exclusions, field.getName())))) {
             boo = false;
-        } else if (field.getAnnotation(Excel.class) != null && (inclusions == null || ArrayUtils.contains(inclusions, field.getName()))
+        } else if (field.getAnnotation(Excel.class) != null
+                && (inclusions == null || ArrayUtils.contains(inclusions, field.getName()))
                 && (exclusions == null || !ArrayUtils.contains(exclusions, field.getName()))) {
             boo = false;
-        } else if (field.getAnnotation(ExcelEntity.class) != null && (inclusions == null || ArrayUtils.contains(inclusions, field.getName()))
+        } else if (field.getAnnotation(ExcelEntity.class) != null
+                && (inclusions == null || ArrayUtils.contains(inclusions, field.getName()))
                 && (exclusions == null || !ArrayUtils.contains(exclusions, field.getName()))) {
             boo = false;
         }
@@ -354,7 +401,8 @@ public final class PoiPublicUtil {
     /**
      * 创建导出实体对象
      */
-    public static ExcelExportEntity createExcelExportEntity(Field field, Class<?> pojoClass, List<Method> getMethods, ExcelEntity excelEntity) {
+    public static ExcelExportEntity createExcelExportEntity(
+            Field field, Class<?> pojoClass, List<Method> getMethods, ExcelEntity excelEntity) {
         ExcelExportEntity excelExportEntity = new ExcelExportEntity();
         Excel excel = field.getAnnotation(Excel.class);
         if (excel.type() == CellType._NONE) {
@@ -363,7 +411,8 @@ public final class PoiPublicUtil {
             excelExportEntity.setType(excel.type());
         }
         excelExportEntity.setStyleType(excel.styleType());
-        excelExportEntity.setName(StringUtils.isEmpty(excel.name()) ? "column" + excel.orderNum() : excel.name());
+        excelExportEntity.setName(
+                StringUtils.isEmpty(excel.name()) ? "column" + excel.orderNum() : excel.name());
         excelExportEntity.setWidth(excel.width());
         excelExportEntity.setMergeVertical(excel.mergeVertical());
         excelExportEntity.setMergeRely(excel.mergeRely());

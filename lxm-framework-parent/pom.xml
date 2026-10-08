@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -15,6 +16,7 @@
     <name>lxm-framework-parent</name>
     <properties>
         <java.version>25</java.version>
+        <lfp.version>2.0.0-java25-SNAPSHOT</lfp.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,6 +27,15 @@
         <druid.version>1.2.28</druid.version>
         <poi.version>5.5.1</poi.version>
         <jsoup.version>1.23.2</jsoup.version>
+        <jackson-bom.version>3.2.3</jackson-bom.version>
+        <jackson-2-bom.version>2.22.3</jackson-2-bom.version>
+        <caffeine.version>3.3.0</caffeine.version>
+        <commons-lang3.version>3.21.0</commons-lang3.version>
+        <h2.version>2.5.252</h2.version>
+        <jedis.version>8.0.2</jedis.version>
+        <mongodb.version>5.13.0</mongodb.version>
+        <mysql.version>26.7.0</mysql.version>
+        <slf4j.version>2.0.20</slf4j.version>
         <mybatis-plus.version>3.5.17</mybatis-plus.version>
         <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.6.0</maven-surefire-plugin.version>
@@ -76,52 +87,52 @@
             <dependency>
                 <groupId>com.lxm</groupId>
                 <artifactId>lxm-framework-all</artifactId>
-                <version>${project.version}</version>
+                <version>${lfp.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.lxm</groupId>
                 <artifactId>lxm-framework-auth</artifactId>
-                <version>${project.version}</version>
+                <version>${lfp.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.lxm</groupId>
                 <artifactId>lxm-framework-common</artifactId>
-                <version>${project.version}</version>
+                <version>${lfp.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.lxm</groupId>
                 <artifactId>lxm-framework-email</artifactId>
-                <version>${project.version}</version>
+                <version>${lfp.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.lxm</groupId>
                 <artifactId>lxm-framework-excel</artifactId>
-                <version>${project.version}</version>
+                <version>${lfp.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.lxm</groupId>
                 <artifactId>lxm-framework-mongo</artifactId>
-                <version>${project.version}</version>
+                <version>${lfp.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.lxm</groupId>
                 <artifactId>lxm-framework-mybatisplus</artifactId>
-                <version>${project.version}</version>
+                <version>${lfp.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.lxm</groupId>
                 <artifactId>lxm-framework-redis</artifactId>
-                <version>${project.version}</version>
+                <version>${lfp.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.lxm</groupId>
                 <artifactId>lxm-framework-web</artifactId>
-                <version>${project.version}</version>
+                <version>${lfp.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.lxm</groupId>
                 <artifactId>lxm-framework-enigma</artifactId>
-                <version>${project.version}</version>
+                <version>${lfp.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -158,10 +169,23 @@
     <profiles>
         <profile>
             <id>integration</id>
-            <build><plugins><plugin>
-                <groupId>org.apache.maven.plugins</groupId><artifactId>maven-failsafe-plugin</artifactId><version>3.6.0</version>
-                <executions><execution><goals><goal>integration-test</goal><goal>verify</goal></goals></execution></executions>
-            </plugin></plugins></build>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>3.6.0</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 </project>

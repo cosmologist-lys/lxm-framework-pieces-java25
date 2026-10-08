@@ -33,7 +33,7 @@ public abstract class AbstractRedisPartCore implements Serializable {
     }
 
     public AbstractRedisPartCore setPrefix(String prefix) {
-        if (StringUtils.isNotBlank(prefix)){
+        if (StringUtils.isNotBlank(prefix)) {
             this.prefix = prefix.trim();
         }
         return this;
@@ -44,18 +44,18 @@ public abstract class AbstractRedisPartCore implements Serializable {
     }
 
     public AbstractRedisPartCore setKey(String key) {
-        if (StringUtils.isNotBlank(key)){
+        if (StringUtils.isNotBlank(key)) {
             this.key = key.trim();
         }
         return this;
     }
 
     public String getFinKey() {
-        if (null != finKey && finKey.length() > 0){
+        if (null != finKey && finKey.length() > 0) {
             return finKey;
         }
         String k = "";
-        if (null != prefix){
+        if (null != prefix) {
             k = prefix.concat("-");
         }
         finKey = k.concat(key);
@@ -63,7 +63,7 @@ public abstract class AbstractRedisPartCore implements Serializable {
     }
 
     public AbstractRedisPartCore setFinKey(String finKey) {
-        if (StringUtils.isNotBlank(finKey)){
+        if (StringUtils.isNotBlank(finKey)) {
             this.finKey = finKey;
         }
         return this;

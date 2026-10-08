@@ -18,16 +18,21 @@ import java.util.Objects;
 public class InterceptUtils {
 
     public static void setFieldTenantId(BoundSql boundSql, MetaObject metaObject) {
-        var tid = metaObject.hasGetter(SqlConstant.TID) ? metaObject.getValue(SqlConstant.TID) : null;
+        var tid =
+                metaObject.hasGetter(SqlConstant.TID) ? metaObject.getValue(SqlConstant.TID) : null;
         if (Objects.isNull(tid)) {
-            throw new IllegalStateException("Tenant identity must be supplied by PrincipleProvider");
+            throw new IllegalStateException(
+                    "Tenant identity must be supplied by PrincipleProvider");
         } else {
             setFieldValueByName(boundSql, SqlConstant.TID, tid, metaObject);
         }
     }
 
     public static void setFieldUpdatedBy(BoundSql boundSql, MetaObject metaObject) {
-        var byId = metaObject.hasGetter(SqlConstant.UPDATED_BY_ID) ? metaObject.getValue(SqlConstant.UPDATED_BY_ID) : null;
+        var byId =
+                metaObject.hasGetter(SqlConstant.UPDATED_BY_ID)
+                        ? metaObject.getValue(SqlConstant.UPDATED_BY_ID)
+                        : null;
         if (Objects.isNull(byId)) {
             throw new IllegalStateException("User identity must be supplied by PrincipleProvider");
         } else {
@@ -36,7 +41,10 @@ public class InterceptUtils {
     }
 
     public static void setFieldCreatedBy(BoundSql boundSql, MetaObject metaObject) {
-        var byId = metaObject.hasGetter(SqlConstant.CREATED_BY_ID) ? metaObject.getValue(SqlConstant.CREATED_BY_ID) : null;
+        var byId =
+                metaObject.hasGetter(SqlConstant.CREATED_BY_ID)
+                        ? metaObject.getValue(SqlConstant.CREATED_BY_ID)
+                        : null;
         if (Objects.isNull(byId)) {
             throw new IllegalStateException("User identity must be supplied by PrincipleProvider");
         } else {
@@ -44,12 +52,17 @@ public class InterceptUtils {
         }
     }
 
-    public static void setFieldUpdatedTime(BoundSql boundSql, MetaObject metaObject, LocalDateTime time) {
+    public static void setFieldUpdatedTime(
+            BoundSql boundSql, MetaObject metaObject, LocalDateTime time) {
         setFieldValueByName(boundSql, SqlConstant.UPDATED_AT, time, metaObject);
     }
 
-    public static void setFieldCreatedTime(BoundSql boundSql, MetaObject metaObject, LocalDateTime time) {
-        var cat = metaObject.hasGetter(SqlConstant.CREATED_AT) ? metaObject.getValue(SqlConstant.CREATED_AT) : null;
+    public static void setFieldCreatedTime(
+            BoundSql boundSql, MetaObject metaObject, LocalDateTime time) {
+        var cat =
+                metaObject.hasGetter(SqlConstant.CREATED_AT)
+                        ? metaObject.getValue(SqlConstant.CREATED_AT)
+                        : null;
         if (Objects.isNull(cat)) {
             setFieldValueByName(boundSql, SqlConstant.CREATED_AT, time, metaObject);
         } else {
@@ -57,8 +70,9 @@ public class InterceptUtils {
         }
     }
 
-    public static void setFieldDeletedTime(BoundSql boundSql, MetaObject metaObject, LocalDateTime time) {
-        Object finalTime = Objects.isNull(time) ? LocalDateTime.of(1900,1,1,0,0) : time;
+    public static void setFieldDeletedTime(
+            BoundSql boundSql, MetaObject metaObject, LocalDateTime time) {
+        Object finalTime = Objects.isNull(time) ? LocalDateTime.of(1900, 1, 1, 0, 0) : time;
         setFieldValueByName(boundSql, SqlConstant.DELETED_TIME, finalTime, metaObject);
     }
 
@@ -69,14 +83,17 @@ public class InterceptUtils {
 
     public static boolean isDeleteMapper(String statementId) {
         String pureStatementId = StringUtils.substringAfterLast(statementId, ".");
-        return pureStatementId.startsWith(SqlConstant.FLAG_DELETE) || pureStatementId.startsWith(SqlConstant.FLAG_DELETE_SHORT) || pureStatementId.startsWith(SqlConstant.FLAG_REMOVE);
+        return pureStatementId.startsWith(SqlConstant.FLAG_DELETE)
+                || pureStatementId.startsWith(SqlConstant.FLAG_DELETE_SHORT)
+                || pureStatementId.startsWith(SqlConstant.FLAG_REMOVE);
     }
 
     public static boolean escape(String statementId) {
         return StringUtils.endsWith(statementId, SqlConstant.FLAG_ESCAPE);
     }
 
-    private static void setFieldValueByName(BoundSql boundSql, String fieldName, Object fieldVal, MetaObject metaObject) {
+    private static void setFieldValueByName(
+            BoundSql boundSql, String fieldName, Object fieldVal, MetaObject metaObject) {
         if (Objects.isNull(fieldVal)) {
             return;
         }
@@ -95,13 +112,18 @@ public class InterceptUtils {
     }
 
     private static void setFieldValue(String fieldName, Object fieldVal, MetaObject metaObject) {
-        if (SqlConstant.TID.equals(fieldName) && metaObject.getValue(fieldName) != null && ((Number) metaObject.getValue(fieldName)).longValue() >= 0) {
+        if (SqlConstant.TID.equals(fieldName)
+                && metaObject.getValue(fieldName) != null
+                && ((Number) metaObject.getValue(fieldName)).longValue() >= 0) {
             return;
         }
         metaObject.setValue(fieldName, fieldVal);
     }
 
-    public static void fillIdentity(Object parameter, com.lxm.framework.common.principle.StandardPrinciple principle, boolean insert) {
+    public static void fillIdentity(
+            Object parameter,
+            com.lxm.framework.common.principle.StandardPrinciple principle,
+            boolean insert) {
         if (parameter == null) return;
         if (parameter instanceof java.util.Collection<?> items) {
             items.forEach(item -> fillIdentity(item, principle, insert));
@@ -109,21 +131,32 @@ public class InterceptUtils {
         }
         if (parameter instanceof java.util.Map<?, ?> map) {
             for (String key : java.util.List.of("et", "list", "collection")) {
-                if (map.containsKey(key)) { fillIdentity(map.get(key), principle, insert); return; }
+                if (map.containsKey(key)) {
+                    fillIdentity(map.get(key), principle, insert);
+                    return;
+                }
             }
         }
         var target = SystemMetaObject.forObject(parameter);
         if (target.hasSetter(SqlConstant.TID)) {
-            if (principle == null || principle.getTenantId() < 0) throw new IllegalStateException("Trusted tenant identity required");
-            Object existing = target.hasGetter(SqlConstant.TID) ? target.getValue(SqlConstant.TID) : null;
-            if (existing instanceof Number number && number.longValue() >= 0 && number.longValue() != principle.getTenantId()) {
+            if (principle == null || principle.getTenantId() < 0)
+                throw new IllegalStateException("Trusted tenant identity required");
+            Object existing =
+                    target.hasGetter(SqlConstant.TID) ? target.getValue(SqlConstant.TID) : null;
+            if (existing instanceof Number number
+                    && number.longValue() >= 0
+                    && number.longValue() != principle.getTenantId()) {
                 throw new IllegalArgumentException("Entity tenant does not match current identity");
             }
             target.setValue(SqlConstant.TID, principle.getTenantId());
         }
-        for (String field : insert ? java.util.List.of(SqlConstant.CREATED_BY_ID, SqlConstant.UPDATED_BY_ID) : java.util.List.of(SqlConstant.UPDATED_BY_ID)) {
+        for (String field :
+                insert
+                        ? java.util.List.of(SqlConstant.CREATED_BY_ID, SqlConstant.UPDATED_BY_ID)
+                        : java.util.List.of(SqlConstant.UPDATED_BY_ID)) {
             if (target.hasSetter(field)) {
-                if (principle == null || principle.getUserId() < 0) throw new IllegalStateException("Trusted user identity required");
+                if (principle == null || principle.getUserId() < 0)
+                    throw new IllegalStateException("Trusted user identity required");
                 target.setValue(field, principle.getUserId());
             }
         }

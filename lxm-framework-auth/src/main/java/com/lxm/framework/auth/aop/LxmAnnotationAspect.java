@@ -16,12 +16,10 @@ import java.lang.reflect.Method;
  * @Describe
  **/
 @Aspect
-
 @Order(Integer.MIN_VALUE)
 public class LxmAnnotationAspect {
 
-    public LxmAnnotationAspect() {
-    }
+    public LxmAnnotationAspect() {}
 
     private static final String POINT_CUT_TAG =
             "@within(com.lxm.framework.auth.aop.LxmCheckPermission) || @annotation(com.lxm.framework.auth.aop.LxmCheckPermission) || "
@@ -29,8 +27,7 @@ public class LxmAnnotationAspect {
                     + "@within(com.lxm.framework.auth.aop.LxmCheckOr) || @annotation(com.lxm.framework.auth.aop.LxmCheckOr)";
 
     @Pointcut(POINT_CUT_TAG)
-    public void pointcut() {
-    }
+    public void pointcut() {}
 
     /**
      * 环绕切入

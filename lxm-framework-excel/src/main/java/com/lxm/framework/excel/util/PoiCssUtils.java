@@ -20,22 +20,28 @@ public class PoiCssUtils {
      * matches #rgb
      */
     private static final String COLOR_PATTERN_VALUE_SHORT = "^(#(?:[a-f]|\\d){3})$";
+
     /**
      * matches #rrggbb
      */
     private static final String COLOR_PATTERN_VALUE_LONG = "^(#(?:[a-f]|\\d{2}){3})$";
+
     /**
      * matches #rgb(r, g, b)
      **/
-    private static final String COLOR_PATTERN_RGB = "^(rgb\\s*\\(\\s*(.+)\\s*,\\s*(.+)\\s*,\\s*(.+)\\s*\\))$";
+    private static final String COLOR_PATTERN_RGB =
+            "^(rgb\\s*\\(\\s*(.+)\\s*,\\s*(.+)\\s*,\\s*(.+)\\s*\\))$";
+
     /**
      * matches #rgb abc
      **/
     private static final Pattern COLOR_PATTERN_VALUE_SHORT_PATTERN = Pattern.compile("([a-f]|\\d)");
+
     /**
      * matches #字母、百分数
      **/
     private static final Pattern INT_PATTERN = Pattern.compile("^(\\d+)(?:\\w+|%)?$");
+
     /**
      * matches #数字、百分数
      **/
@@ -110,8 +116,11 @@ public class PoiCssUtils {
                 Matcher m = Pattern.compile(COLOR_PATTERN_RGB).matcher(color);
                 if (m.matches()) {
                     log.debug("RGB Color [{}] Found.", color);
-                    colorRtn = convertColor(calcColorValue(m.group(2)), calcColorValue(m.group(3)),
-                            calcColorValue(m.group(4)));
+                    colorRtn =
+                            convertColor(
+                                    calcColorValue(m.group(2)),
+                                    calcColorValue(m.group(3)),
+                                    calcColorValue(m.group(4)));
                     log.debug("Translate RGB Color [{}] To Hex [{}].", color, colorRtn);
                 }
             }
@@ -352,5 +361,4 @@ public class PoiCssUtils {
         }
         return rtn;
     }
-
 }
