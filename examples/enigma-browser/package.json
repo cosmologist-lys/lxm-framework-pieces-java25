@@ -1,0 +1,12 @@
+{
+  "name": "enigma-browser-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check enigma.js && node --check demo.js",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0"
+  }
+}

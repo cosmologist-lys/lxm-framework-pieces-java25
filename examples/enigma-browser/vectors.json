@@ -1,0 +1,50 @@
+{
+  "canonicalInput" : {
+    "unicode" : "中文💡",
+    "literals" : [ null, true, false ],
+    "numbers" : [ 3.333333333333333E8, 1.0E30, 4.5, 0.002, 1.0E-27 ],
+    "2" : 2,
+    "10" : 1
+  },
+  "canonicalExpected" : "{\"10\":1,\"2\":2,\"literals\":[null,true,false],\"numbers\":[333333333.3333333,1e+30,4.5,0.002,1e-27],\"unicode\":\"中文💡\"}",
+  "signContext" : {
+    "v" : 1,
+    "mode" : "SIGN",
+    "direction" : "request",
+    "sid" : "EBESExQVFhcYGRobHB0eHw",
+    "kid" : "ICEiIyQlJicoKSorLC0uLw",
+    "method" : "PUT",
+    "path" : "/demo/params",
+    "params" : {
+      "bare" : [ "" ],
+      "q" : [ "中文", "+", "" ]
+    },
+    "contentType" : "",
+    "timestamp" : "1800000000000",
+    "nonce" : "MDEyMzQ1Njc4OTo7PD0-Pw"
+  },
+  "signature" : "g_ZOntp-PqdJeNnnQVWHDqe4gHuSreTFvgWgwbVSjxU",
+  "requestSigning" : "QEFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaW1xdXl8",
+  "requestEncryption" : "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+  "encryptContext" : {
+    "v" : 1,
+    "mode" : "ENCRYPT",
+    "direction" : "request",
+    "sid" : "EBESExQVFhcYGRobHB0eHw",
+    "kid" : "ICEiIyQlJicoKSorLC0uLw",
+    "method" : "POST",
+    "path" : "/demo/body",
+    "params" : { },
+    "contentType" : "application/json",
+    "timestamp" : "1800000000000",
+    "nonce" : "MDEyMzQ1Njc4OTo7PD0-Pw"
+  },
+  "plaintext" : {
+    "numbers" : [ 4.5, 0.002, 1.0E-27 ],
+    "secret" : "private",
+    "id" : "9007199254740993",
+    "name" : "中文"
+  },
+  "iv" : "AAECAwQFBgcICQoL",
+  "ciphertext" : "PCC_f-ff4CK9caC6iNBKWLfhswTJQmxeFEWL5HAMIogj9BZRSVeVuliGEZjl5U1KnXta1m74lvYPuRopKs_Ei90O8Sf_81UEfybPGs21LJhK478DAgZxFfXl32eacEK6xZkTQ56fEDM"
+}

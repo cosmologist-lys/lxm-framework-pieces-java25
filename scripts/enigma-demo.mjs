@@ -1,0 +1,13 @@
+import { readFileSync } from 'node:fs';
+import { spawn } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
+const root=fileURLToPath(new URL('../',import.meta.url));
+const xml=readFileSync(join(root,'lxm-framework-enigma/target/surefire-reports/TEST-org.example.EnigmaHttpTest.xml'),'utf8');
+const match=xml.match(/<property name="java.class.path" value="([^"]*)"/);
+if(!match) throw new Error('先在仓库根目录执行 ./mvnw verify');
+const classpath=match[1].replaceAll('&quot;','"').replaceAll('&apos;',"'").replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&amp;','&');
+const java=process.env.JAVA_HOME ? join(process.env.JAVA_HOME,'bin/java') : 'java';
+const child=spawn(java,['-cp',classpath,'org.example.EnigmaDemoApplication',process.argv[2]||'18888'],{cwd:join(root,'lxm-framework-enigma'),stdio:'inherit'});
+for(const signal of ['SIGINT','SIGTERM'])process.on(signal,()=>child.kill(signal));
+child.on('exit',code=>process.exit(code??1));

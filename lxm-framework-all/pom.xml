@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='utf-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>lxm-framework-all</artifactId>
+    <packaging>jar</packaging>
+    <version>2.0.0-java25-SNAPSHOT</version>
+    <parent>
+        <groupId>com.lxm</groupId>
+        <artifactId>lxm-framework-parent</artifactId>
+        <version>2.0.0-java25-SNAPSHOT</version>
+        <relativePath>../lxm-framework-parent/pom.xml</relativePath>
+    </parent>
+    <dependencies>
+        <dependency>
+            <groupId>com.lxm</groupId>
+            <artifactId>lxm-framework-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lxm</groupId>
+            <artifactId>lxm-framework-email</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lxm</groupId>
+            <artifactId>lxm-framework-excel</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lxm</groupId>
+            <artifactId>lxm-framework-mongo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lxm</groupId>
+            <artifactId>lxm-framework-mybatisplus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lxm</groupId>
+            <artifactId>lxm-framework-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lxm</groupId>
+            <artifactId>lxm-framework-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lxm</groupId>
+            <artifactId>lxm-framework-auth</artifactId>
+        </dependency>
+        <dependency><groupId>com.lxm</groupId><artifactId>lxm-framework-enigma</artifactId></dependency>
+    </dependencies>
+    <name>${project.artifactId}</name>
+    <description>Java project for varies of tools</description>
+    <url>https://gitee.com/cosmologist/lxm-framework-pieaces</url>
+    <developers>
+        <developer>
+            <name>ptk</name>
+            <email>lyskaka22@gmail.com</email>
+        </developer>
+    </developers>
+</project>
