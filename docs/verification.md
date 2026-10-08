@@ -4,13 +4,14 @@
 
 | 验证 | 已执行结果 |
 | --- | --- |
-| Boot 3.5.16 / 4.0.8 检查点 | 全 reactor package 成功，跳过测试 |
-| Boot 4.1.1 完整 JDK 25 clean verify -Pintegration | 32 个 Test + 6 个 IT，0 失败、0 错误、0 跳过 |
+| Boot 3.5.16 / 4.0.8 检查点 | Java 21 迁移基线的全 reactor package 成功，跳过测试；未在 Java 25 重复执行这两个过渡版本 |
+| Boot 4.1.1 本机 JDK 25 reactor 验证 | 初次 clean verify -Pintegration 为 31 个 Test + 6 个 IT；补充普通异步 HTTP 回归后 verify -Pintegration 为 32 个 Test + 6 个 IT，0 失败、0 错误、0 跳过 |
+| GitHub Actions JDK 25 clean verify -Pintegration | Temurin 25.0.4-1，32 个 Test + 6 个 IT，0 失败、0 错误、0 跳过；Chromium 用例通过 |
 | 真实服务 | Redis 8.2.2、MySQL 8.4.11、MongoDB 8.0.24，本地临时独立服务 |
 | 邮件 | 本地 SMTP 协议/MIME 接收、双收件人、UTF-8、附件 |
 | 使用方 | 框架包外应用、实际嵌入式 Servlet HTTP、all 无服务启动 |
 | 浏览器 | Chromium / Playwright 1.64.0，1 个端到端用例含九组协议断言；JDK 25 服务完成独立 Chromium 验证；JDK 21 另有 Codex 浏览器实测通过 |
-| 依赖 | effective POM、全 reactor dependency:tree 完成 |
+| 依赖 | Java 21 基线的 effective POM、全 reactor dependency:tree 完成；Java 25 使用独立坐标在实际 JDK 25 完整构建 |
 
 ## 命令
 
@@ -27,7 +28,7 @@ npm test
 
 服务属性：Redis `-Dlfp.redis.port=16379`，Mongo `-Dlfp.mongo.uri=mongodb://127.0.0.1:17017`，MySQL `-Dlfp.mysql.server=jdbc:mysql://127.0.0.1:13306/ -Dlfp.mysql.user=root -Dlfp.mysql.password=...`。默认本机 MySQL 测试密码为空，仅用于回环临时实例；CI 用公开测试密码。MySQL 测试创建独立 lfp_test_UUID 数据库并 finally 删除；Mongo 同样使用唯一数据库，Redis 使用 lfp:test:UUID 前缀。不要把集成测试指向业务数据库。
 
-CI 用 `.github/workflows/ci.yml` 的专用服务容器，执行完整测试和 Chromium；源码推送后以实际 GitHub Actions 结果为准，本地通过不等于远端已通过。
+CI 用 `.github/workflows/ci.yml` 的专用服务容器，执行完整测试和 Chromium。2026-10-08 已完成的[验收运行](https://github.com/cosmologist-lys/lxm-framework-pieces-java25/actions/runs/37733020529)通过，覆盖源码提交 `d2fd287ff041546f47d29db9842bf28e24aa0bb4`。之后的提交按各自运行结果判断。
 
 未执行公网邮箱登录/发送、Redis Cluster/故障切换、一致性压力或无限规模文件测试。部署支持边界见协议与模块 README。
 
