@@ -5,7 +5,7 @@
 | 验证 | 已执行结果 |
 | --- | --- |
 | Boot 3.5.16 / 4.0.8 检查点 | 全 reactor package 成功，跳过测试 |
-| Boot 4.1.1 完整 JDK 25 clean verify -Pintegration | 31 个 Test + 6 个 IT，0 失败、0 错误、0 跳过 |
+| Boot 4.1.1 完整 JDK 25 clean verify -Pintegration | 32 个 Test + 6 个 IT，0 失败、0 错误、0 跳过 |
 | 真实服务 | Redis 8.2.2、MySQL 8.4.11、MongoDB 8.0.24，本地临时独立服务 |
 | 邮件 | 本地 SMTP 协议/MIME 接收、双收件人、UTF-8、附件 |
 | 使用方 | 框架包外应用、实际嵌入式 Servlet HTTP、all 无服务启动 |

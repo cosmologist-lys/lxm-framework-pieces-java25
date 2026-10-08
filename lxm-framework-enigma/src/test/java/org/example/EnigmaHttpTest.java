@@ -11,6 +11,11 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EnigmaHttpTest {
+    @Test void ordinaryAsyncEndpointStillWorksWhenEnigmaIsEnabled() throws Exception {
+        var response=http.send(HttpRequest.newBuilder(URI.create(origin+"/demo/async")).GET().build(),HttpResponse.BodyHandlers.ofByteArray());
+        assertEquals(200,response.statusCode());assertEquals("async",ProtocolJson.read(response.body()).path("data").asString());
+        assertTrue(response.headers().firstValue("X-Enigma-Mode").isEmpty());
+    }
     static ConfigurableApplicationContext application;
     static String origin;
     static final HttpClient http=HttpClient.newHttpClient();

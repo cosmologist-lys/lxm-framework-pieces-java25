@@ -17,7 +17,13 @@ public final class EnigmaResponseFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request,HttpServletResponse response,FilterChain chain) throws ServletException,IOException {
         var buffered=new BufferedResponse(request,response,properties.getMaxBodyBytes());
-        try { chain.doFilter(request,buffered); }
+        var guarded=new HttpServletRequestWrapper(request) {
+            private void checkAsync() { if (getAttribute(EnigmaInterceptor.POLICY)!=null) throw new IllegalStateException("Protected endpoints require synchronous output"); }
+            @Override public boolean isAsyncSupported() { return getAttribute(EnigmaInterceptor.POLICY)==null && super.isAsyncSupported(); }
+            @Override public AsyncContext startAsync() { checkAsync();return super.startAsync(); }
+            @Override public AsyncContext startAsync(ServletRequest req,ServletResponse res) { checkAsync();return super.startAsync(req,res); }
+        };
+        try { chain.doFilter(guarded,buffered); }
         catch (Exception failure) {
             if (request.getAttribute(EnigmaInterceptor.POLICY)==null) {
                 if (failure instanceof IOException io) throw io;
@@ -66,8 +72,11 @@ public final class EnigmaResponseFilter extends OncePerRequestFilter {
             if (stream==null) {
                 var direct=super.getOutputStream();
                 stream=new ServletOutputStream() {
-                    public boolean isReady() { return true; }
-                    public void setWriteListener(WriteListener listener) { throw new IllegalStateException("Async protected output is unsupported"); }
+                    public boolean isReady() { return protectedResponse() || direct.isReady(); }
+                    public void setWriteListener(WriteListener listener) {
+                        if (protectedResponse()) throw new IllegalStateException("Async protected output is unsupported");
+                        direct.setWriteListener(listener);
+                    }
                     public void write(int value) throws IOException {
                         if (!protectedResponse()) direct.write(value);
                         else { if (buffer.size()>=maximum) throw new IOException("Protected response exceeds configured limit");buffer.write(value); }

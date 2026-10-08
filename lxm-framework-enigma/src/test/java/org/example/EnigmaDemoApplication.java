@@ -36,6 +36,7 @@ public class EnigmaDemoApplication {
     public record Person(@NotBlank String name,String secret) { }
     @RestController
     public static class SampleController {
+        @GetMapping("/demo/async") public java.util.concurrent.Callable<JsonResult<?>> async() { return () -> JsonResult.json(0,"","async"); }
         @GetMapping("/demo/params/{id}") @EnigmaProtected(EnigmaProtected.Mode.SIGN)
         public JsonResult<?> params(@PathVariable String id,@RequestParam MultiValueMap<String,String> params) {
             calls.incrementAndGet();return JsonResult.json(0,"",Map.of("id",id,"params",params));

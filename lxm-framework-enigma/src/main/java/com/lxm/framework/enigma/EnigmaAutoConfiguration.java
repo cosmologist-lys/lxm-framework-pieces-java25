@@ -44,7 +44,7 @@ public class EnigmaAutoConfiguration {
     public EnigmaInterceptor enigmaInterceptor(EnigmaProperties properties,EnigmaIdentityResolver identities,EnigmaSessionService sessions,EnigmaProtocol protocol) { return new EnigmaInterceptor(properties,identities,sessions,protocol); }
     @Bean
     public FilterRegistrationBean<EnigmaResponseFilter> enigmaResponseFilter(EnigmaProtocol protocol,EnigmaProperties properties) {
-        var bean=new FilterRegistrationBean<>(new EnigmaResponseFilter(protocol,properties));bean.setOrder(-10000);bean.setAsyncSupported(false);return bean;
+        var bean=new FilterRegistrationBean<>(new EnigmaResponseFilter(protocol,properties));bean.setOrder(-10000);bean.setAsyncSupported(true);return bean;
     }
     @Bean
     public WebMvcConfigurer enigmaMvcConfigurer(EnigmaInterceptor interceptor,EnigmaProperties properties) {

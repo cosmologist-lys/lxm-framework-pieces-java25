@@ -1,6 +1,6 @@
 # Java 25 独立审查
 
-日期：2026-10-08。对已验收 Java 21 基线的 Maven 坐标、release、处理器、CI、文档与 JDK 25 运行差异独立复核。所有 Java 源码逐文件相同，协议/浏览器源码与固定向量逐字节一致。实际 JDK 25 clean verify -Pintegration 通过 31 Test + 6 IT，0 失败/错误/跳过；JDK 25 启动的服务通过 Chromium Web Crypto 测试。未借用 Java 21 的测试结果作 Java 25 运行结论。
+日期：2026-10-08。对已验收 Java 21 基线的 Maven 坐标、release、处理器、CI、文档与 JDK 25 运行差异独立复核。所有 Java 源码逐文件相同，协议/浏览器源码与固定向量逐字节一致。实际 JDK 25 clean verify -Pintegration 通过 32 Test + 6 IT，0 失败/错误/跳过；JDK 25 启动的服务通过 Chromium Web Crypto 测试。未借用 Java 21 的测试结果作 Java 25 运行结论。
 
 jdeps 未发现项目 JAR 使用 JDK internal API，jdeprscan --for-removal 未列出项目待移除 API。依赖层 Lombok Permit、BeeCP 原子字段更新器仍调用 sun.misc.Unsafe::objectFieldOffset，JDK 25 打印废弃警告；所选为当前已核实稳定版本，当前构建/真实连接池测试成功，未用 JVM 选项隐藏警告。它们的未来 JDK 兼容性需跟随上游。
 
@@ -42,3 +42,5 @@ jdeps 未发现项目 JAR 使用 JDK internal API，jdeprscan --for-removal 未�
 - 输入到自定义 SQL/公式/URL 附件仍需应用自己的授权与参数限制。框架不会替代业务访问规则。
 
 构建与实际测试结果见 [verification](verification.md)；上述已确认缺陷已修复，列明的功能边界不是已实现的能力。
+
+补充审查：Filter 原 asyncSupported=false 会阻断启用 Enigma 时普通异步接口。改为容器支持 async，仅已声明保护的请求拒绝 startAsync；普通 Callable 接口已有真实 HTTP 回归。
